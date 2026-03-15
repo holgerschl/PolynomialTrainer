@@ -266,7 +266,6 @@
     <div class="card">
         <div class="mode-row">
             <label><input type="checkbox" id="factoredMode"> Show in factored form (easier)</label>
-            <label><input type="checkbox" id="showFormula" checked> Show formula</label>
         </div>
         <div class="formula-box" id="formulaBox"></div>
         <div id="graphSection" style="display: none;">
@@ -482,12 +481,6 @@
 
     function updateFormula() {
         const box = document.getElementById("formulaBox");
-        const show = document.getElementById("showFormula").checked;
-        if (!show) {
-            box.textContent = "(hidden)";
-            box.style.color = "var(--gray-500)";
-            return;
-        }
         box.style.color = "var(--gray-900)";
         const factored = document.getElementById("factoredMode").checked;
         box.textContent = factored ? formatFactored(poly.a, poly.factors) : formatStandard(poly.coeffs);
@@ -867,7 +860,6 @@
     document.getElementById("btnSolution").addEventListener("click", showSolution);
     document.getElementById("btnAddZero").addEventListener("click", addZeroEntry);
     document.getElementById("factoredMode").addEventListener("change", updateFormula);
-    document.getElementById("showFormula").addEventListener("change", updateFormula);
 
     document.getElementById("btnShowGraph").addEventListener("click", function() {
         const section = document.getElementById("graphSection");
