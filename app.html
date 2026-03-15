@@ -831,6 +831,13 @@
             "bl-br": "Bottom-left \u2192 Bottom-right"
         };
 
+        const correctRadio = document.querySelector('input[name="behavior"][value="' + beh + '"]');
+        if (correctRadio) {
+            correctRadio.checked = true;
+            document.querySelectorAll('.behavior-option').forEach(el => el.classList.remove('selected'));
+            correctRadio.closest('.behavior-option').classList.add('selected');
+        }
+
         let text = "End behavior: " + behNames[beh] + "\n";
         text += "Zeros: " + poly.roots.map(f => "x = " + f.root + " (mult " + f.mult + ")").join(",  ");
         text += "\n" + formatFactored(poly);
