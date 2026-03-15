@@ -867,11 +867,7 @@
         document.getElementById("btnShowGraph").textContent = "Show Graph";
 
         const checkbox = document.getElementById("factoredMode");
-        if (poly.m > 1) {
-            checkbox.checked = true;
-        } else {
-            checkbox.checked = Math.random() < 0.5;
-        }
+        checkbox.checked = poly.m > 1;
         updateFormula();
     }
 
