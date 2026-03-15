@@ -23,886 +23,467 @@
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: #F0F2F5;
             color: var(--gray-700);
-            line-height: 1.6;
-            min-height: 100vh;
+            line-height: 1.7;
+            background: var(--gray-50);
         }
 
-        .header {
-            background: linear-gradient(135deg, #1E3A8A 0%, var(--blue) 100%);
+        .hero {
+            background: linear-gradient(135deg, #3B0764 0%, var(--purple) 100%);
             color: white;
-            padding: 1.25rem 2rem;
+            padding: 4rem 2rem 3rem;
             text-align: center;
         }
 
-        .header h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; }
-        .header p { font-size: 0.95rem; opacity: 0.85; margin-top: 0.2rem; }
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
 
-        .main { max-width: 1100px; margin: 1rem auto; padding: 0 1rem; }
+        .hero p {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            max-width: 640px;
+            margin: 0 auto 1.5rem;
+        }
 
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-            padding: 1rem;
+        .hero .formula {
+            font-family: 'Cambria Math', 'Latin Modern Math', Georgia, serif;
+            font-size: 1.5rem;
+            background: rgba(255,255,255,0.15);
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
             margin-bottom: 1rem;
         }
 
-        canvas {
-            display: block;
-            width: 100%;
-            border-radius: 8px;
+        .hero .formula .hl-a { color: #FCA5A5; font-weight: 700; }
+        .hero .formula .hl-k { color: #FDE68A; font-weight: 700; }
+        .hero .formula .hl-q { color: #6EE7B7; font-weight: 700; }
+        .hero .formula .hl-m { color: #C4B5FD; font-weight: 700; }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
         }
 
-        .section-title {
-            font-size: 1rem;
-            font-weight: 700;
+        section { margin-bottom: 3rem; }
+
+        h2 {
+            font-size: 1.8rem;
             color: var(--gray-900);
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid var(--purple);
+            display: inline-block;
         }
 
-        /* Mode toggle */
-        .mode-row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-wrap: wrap;
-            margin-bottom: 0.75rem;
-        }
-
-        .mode-row label {
-            font-size: 0.95rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            user-select: none;
-        }
-
-        .mode-row input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--blue);
-        }
-
-        /* Formula display */
-        .formula-box {
-            background: var(--gray-50);
-            border: 1px solid var(--gray-200);
-            border-radius: 8px;
-            padding: 0.6rem 1rem;
-            font-size: 1.15rem;
-            font-family: 'Cambria Math', 'Times New Roman', serif;
-            font-weight: 600;
+        h3 {
+            font-size: 1.2rem;
             color: var(--gray-900);
-            min-height: 2.2rem;
-            margin-bottom: 0.75rem;
-            overflow-x: auto;
+            margin: 1.5rem 0 0.5rem;
         }
 
-        /* End behavior */
-        .behavior-grid {
+        p { margin-bottom: 1rem; }
+
+        .features-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1rem;
         }
 
-        .behavior-option {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0.75rem;
-            border: 2px solid var(--gray-200);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: border-color 0.2s, background 0.2s;
-            user-select: none;
-        }
-
-        .behavior-option:hover { border-color: var(--blue); background: #EFF6FF; }
-        .behavior-option.selected { border-color: var(--blue); background: #DBEAFE; }
-
-        .behavior-option input[type="radio"] {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--blue);
-        }
-
-        .arrow-icon {
-            font-size: 1.4rem;
-            line-height: 1;
-            width: 1.8rem;
-            text-align: center;
-        }
-
-        .behavior-label { font-size: 0.88rem; font-weight: 600; }
-
-        /* Zeros section */
-        .zero-entry {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.4rem;
-            flex-wrap: wrap;
-        }
-
-        .zero-entry span { font-weight: 600; font-size: 0.95rem; }
-
-        .zero-entry input[type="text"] {
-            width: 60px;
-            padding: 0.35rem 0.5rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-align: center;
-            border: none;
-            border-bottom: 2px solid var(--gray-200);
-            outline: none;
-            background: transparent;
-            transition: border-color 0.2s;
-        }
-
-        .zero-entry input[type="text"]:focus { border-bottom-color: var(--blue); }
-
-        .zero-entry select {
-            padding: 0.35rem 0.5rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border: 1px solid var(--gray-200);
-            border-radius: 6px;
+        .feature-card {
             background: white;
-            cursor: pointer;
-            outline: none;
+            border-radius: 10px;
+            padding: 1.25rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid var(--gray-200);
         }
 
-        .zero-entry select:focus { border-color: var(--blue); }
+        .feature-card strong {
+            display: block;
+            color: var(--gray-900);
+            margin-bottom: 0.3rem;
+        }
 
-        .btn-sm {
-            padding: 0.25rem 0.6rem;
-            border: none;
-            border-radius: 6px;
+        .feature-card p {
+            font-size: 0.92rem;
+            margin: 0;
+            color: var(--gray-500);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        th {
+            background: var(--purple);
+            color: white;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.65rem 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            font-size: 0.92rem;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: var(--gray-50); }
+
+        .steps {
+            counter-reset: step;
+            list-style: none;
+            padding: 0;
+        }
+
+        .steps > li {
+            counter-increment: step;
+            position: relative;
+            padding: 1rem 1rem 1rem 3.5rem;
+            margin-bottom: 0.75rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            border: 1px solid var(--gray-200);
+        }
+
+        .steps > li::before {
+            content: counter(step);
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            width: 1.8rem;
+            height: 1.8rem;
+            background: var(--purple);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        code {
+            background: var(--gray-100);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.88em;
+            color: var(--gray-900);
+        }
+
+        pre {
+            background: var(--gray-900);
+            color: #E5E7EB;
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 0.75rem 0 1rem;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .note {
+            background: #FFF7ED;
+            border-left: 4px solid var(--orange);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+            font-size: 0.92rem;
+        }
+
+        .note strong { color: var(--orange); }
+
+        .download-btn {
+            display: inline-block;
+            background: var(--purple);
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .download-btn:hover { background: #7C3AED; }
+
+        .tip-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tip-list li {
+            padding: 0.4rem 0 0.4rem 1.5rem;
+            position: relative;
+        }
+
+        .tip-list li::before {
+            content: '\2192';
+            position: absolute;
+            left: 0;
+            color: var(--purple);
+            font-weight: 700;
+        }
+
+        .tech-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.5rem;
+        }
+
+        .badge {
+            background: white;
+            border: 1px solid var(--gray-200);
+            padding: 0.35rem 0.9rem;
+            border-radius: 20px;
             font-size: 0.85rem;
             font-weight: 600;
-            cursor: pointer;
-            color: white;
-            transition: opacity 0.2s;
-        }
-
-        .btn-sm:hover { opacity: 0.85; }
-        .btn-remove { background: var(--red); }
-        .btn-add { background: var(--blue); margin-top: 0.25rem; }
-
-        /* Buttons */
-        .buttons-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-        }
-
-        .btn {
-            padding: 0.5rem 1.25rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            color: white;
-            transition: opacity 0.2s;
-        }
-
-        .btn:hover { opacity: 0.85; }
-        .btn-blue { background: var(--blue); }
-        .btn-green { background: var(--green); }
-        .btn-orange { background: var(--orange); }
-
-        .feedback {
-            text-align: center;
-            font-size: 1.05rem;
-            font-weight: 600;
-            min-height: 1.6rem;
-            padding: 0.4rem 0;
-        }
-
-        .solution {
-            text-align: center;
-            font-family: 'Consolas', 'Cascadia Code', monospace;
-            font-size: 0.95rem;
-            color: var(--purple);
-            min-height: 1.4rem;
-            white-space: pre-wrap;
-        }
-
-        .score {
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 700;
             color: var(--gray-700);
         }
 
-        .divider {
-            border: none;
+        .giscus-wrapper {
+            margin-top: 1rem;
+            min-height: 150px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-500);
+            font-size: 0.85rem;
             border-top: 1px solid var(--gray-200);
-            margin: 0.75rem 0;
+            margin-top: 2rem;
         }
 
         @media (max-width: 640px) {
-            .header h1 { font-size: 1.3rem; }
-            .behavior-grid { grid-template-columns: 1fr; }
-            .zero-entry input[type="text"] { width: 50px; }
+            .hero h1 { font-size: 2rem; }
+            .hero .formula { font-size: 1.15rem; }
+            h2 { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="header">
+<div class="hero">
     <h1>Polynomial Trainer</h1>
-    <p>Determine end behavior and zeros of polynomial functions from the formula</p>
-</div>
-
-<div class="main">
-    <!-- Mode & Plot -->
-    <div class="card">
-        <div class="mode-row">
-            <label><input type="checkbox" id="factoredMode"> Show in factored form (easier)</label>
-        </div>
-        <div class="formula-box" id="formulaBox"></div>
-        <div id="graphSection" style="display: none;">
-            <canvas id="plotCanvas" width="1060" height="480"></canvas>
-        </div>
-        <div style="margin-top: 0.75rem; text-align: center;">
-            <button class="btn btn-blue" id="btnShowGraph" style="padding: 0.6rem 2rem; font-size: 1rem;">Show Graph</button>
-        </div>
+    <p>A browser-based learning tool that helps students analyse polynomial functions &mdash; determine end behaviour and find zeros with multiplicities.</p>
+    <div class="formula">
+        f(x) = <span class="hl-a">a</span> &middot; x<sup><span class="hl-k">k</span></sup> &middot; (<span class="hl-q">bx&sup2; + cx + d</span>)<sup><span class="hl-m">m</span></sup>
     </div>
-
-    <!-- Exercises -->
-    <div class="card">
-        <div class="section-title">1. End Behavior</div>
-        <div class="behavior-grid" id="behaviorGrid">
-            <label class="behavior-option" data-value="bl-tr">
-                <input type="radio" name="behavior" value="bl-tr">
-                <span class="arrow-icon">&#8599;</span>
-                <span class="behavior-label">Bottom-left &rarr; Top-right</span>
-            </label>
-            <label class="behavior-option" data-value="tl-br">
-                <input type="radio" name="behavior" value="tl-br">
-                <span class="arrow-icon">&#8600;</span>
-                <span class="behavior-label">Top-left &rarr; Bottom-right</span>
-            </label>
-            <label class="behavior-option" data-value="tl-tr">
-                <input type="radio" name="behavior" value="tl-tr">
-                <span class="arrow-icon">&#8613;</span>
-                <span class="behavior-label">Top-left &rarr; Top-right</span>
-            </label>
-            <label class="behavior-option" data-value="bl-br">
-                <input type="radio" name="behavior" value="bl-br">
-                <span class="arrow-icon">&#8615;</span>
-                <span class="behavior-label">Bottom-left &rarr; Bottom-right</span>
-            </label>
-        </div>
-
-        <hr class="divider">
-
-        <div class="section-title">2. Zeros and Multiplicities</div>
-        <div id="zerosContainer"></div>
-        <button class="btn-sm btn-add" id="btnAddZero">+ Add zero</button>
-
-        <hr class="divider">
-
-        <div class="buttons-row">
-            <button class="btn btn-blue" id="btnCheck">Check Answer</button>
-            <button class="btn btn-green" id="btnNew">New Problem</button>
-            <button class="btn btn-orange" id="btnSolution">Show Solution</button>
-        </div>
-
-        <div class="feedback" id="feedback"></div>
-        <div class="solution" id="solutionText"></div>
-        <div class="score" id="scoreText">Score: 0 / 0</div>
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a class="download-btn" href="app.html" style="background: #10B981; font-size: 1.1rem; padding: 0.85rem 2.5rem;">&#9654; Try it in your Browser</a>
+        <a class="download-btn" href="https://holgerschl.github.io/SineParameterTrainer/" target="_blank" rel="noopener" style="background: #3B82F6; font-size: 1.1rem; padding: 0.85rem 2.5rem;">&#9654; Sine Parameter Trainer</a>
     </div>
 </div>
 
-<script>
-(function() {
-    "use strict";
-
-    const canvas = document.getElementById("plotCanvas");
-    const ctx = canvas.getContext("2d");
-
-    let poly = null; // { a, k, m, c, n, degree, coeffs, roots: [{root, mult}] }
-    let score = 0, total = 0;
-    let showSolutionDots = false;
-
-    const PADDING = { top: 20, right: 30, bottom: 50, left: 60 };
-    let xMin, xMax, yMin, yMax;
-
-    // --- Polynomial generation ---
-
-    function randInt(min, max) {
-        return Math.floor(Math.random() * (max - min)) + min;
-    }
-
-    function pickRandom(arr) {
-        return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    function generatePolynomial() {
-        const degree = randInt(2, 6);
-
-        // Structure: a * x^k * (bx² + cx + d)^m, where k + qDeg*m = degree
-        const combos = [];
-        combos.push({ k: degree, qDeg: 0, m: 0 });
-        for (let m = 1; m <= 3; m++) {
-            const k = degree - m;
-            if (k >= 0) combos.push({ k, qDeg: 1, m });
-        }
-        for (let m = 1; m <= 3; m++) {
-            const k = degree - 2 * m;
-            if (k >= 0) combos.push({ k, qDeg: 2, m });
-        }
-
-        const combo = pickRandom(combos);
-        const pool = [-4, -3, -2, -1, 1, 2, 3, 4];
-
-        let qCoeffs = null;
-        const rootMap = {};
-
-        if (combo.k > 0) rootMap[0] = combo.k;
-
-        if (combo.qDeg === 1) {
-            const r = pickRandom(pool);
-            qCoeffs = [-r, 1];
-            rootMap[r] = (rootMap[r] || 0) + combo.m;
-        } else if (combo.qDeg === 2) {
-            const r1 = pickRandom(pool);
-            const r2 = pickRandom(pool);
-            qCoeffs = [r1 * r2, -(r1 + r2), 1];
-            if (r1 === r2) {
-                rootMap[r1] = (rootMap[r1] || 0) + 2 * combo.m;
-            } else {
-                rootMap[r1] = (rootMap[r1] || 0) + combo.m;
-                rootMap[r2] = (rootMap[r2] || 0) + combo.m;
-            }
-        }
-
-        const roots = Object.keys(rootMap)
-            .map(r => ({ root: parseFloat(r), mult: rootMap[r] }))
-            .sort((a, b) => a.root - b.root);
-
-        const a = pickRandom([-3, -2, -1, 1, 2, 3]);
-
-        let coeffs = [a];
-        if (combo.k > 0) {
-            const xk = new Array(combo.k + 1).fill(0);
-            xk[combo.k] = 1;
-            coeffs = multiplyPoly(coeffs, xk);
-        }
-        if (qCoeffs && combo.m > 0) {
-            for (let i = 0; i < combo.m; i++) {
-                coeffs = multiplyPoly(coeffs, qCoeffs);
-            }
-        }
-
-        return { a, k: combo.k, qDeg: combo.qDeg, qCoeffs, m: combo.m, degree, coeffs, roots };
-    }
-
-    function multiplyPoly(a, b) {
-        const result = new Array(a.length + b.length - 1).fill(0);
-        for (let i = 0; i < a.length; i++) {
-            for (let j = 0; j < b.length; j++) {
-                result[i + j] += a[i] * b[j];
-            }
-        }
-        return result;
-    }
-
-    function evalPoly(coeffs, x) {
-        let val = 0;
-        for (let i = coeffs.length - 1; i >= 0; i--) {
-            val = val * x + coeffs[i];
-        }
-        return val;
-    }
-
-    // --- Formula display ---
-
-    function formatStandard(coeffs) {
-        const deg = coeffs.length - 1;
-        let parts = [];
-        for (let i = deg; i >= 0; i--) {
-            const c = coeffs[i];
-            if (Math.abs(c) < 1e-10) continue;
-            let term = "";
-            const absC = Math.abs(c);
-
-            if (i === 0) {
-                term = Math.round(absC).toString();
-            } else if (i === 1) {
-                term = (absC === 1 ? "" : Math.round(absC).toString()) + "x";
-            } else {
-                term = (absC === 1 ? "" : Math.round(absC).toString()) + "x" + superscript(i);
-            }
-
-            if (parts.length === 0) {
-                parts.push(c < 0 ? "\u2212" + term : term);
-            } else {
-                parts.push(c < 0 ? " \u2212 " + term : " + " + term);
-            }
-        }
-        return "f(x) = " + (parts.length > 0 ? parts.join("") : "0");
-    }
-
-    function formatInner(qCoeffs) {
-        const deg = qCoeffs.length - 1;
-        let parts = [];
-        for (let i = deg; i >= 0; i--) {
-            const c = qCoeffs[i];
-            if (Math.abs(c) < 1e-10) continue;
-            const absC = Math.abs(c);
-            let term = "";
-            if (i === 0) term = Math.round(absC).toString();
-            else if (i === 1) term = (absC === 1 ? "" : Math.round(absC).toString()) + "x";
-            else term = (absC === 1 ? "" : Math.round(absC).toString()) + "x" + superscript(i);
-            if (parts.length === 0) parts.push(c < 0 ? "\u2212" + term : term);
-            else parts.push(c < 0 ? " \u2212 " + term : " + " + term);
-        }
-        return parts.join("");
-    }
-
-    function formatFactored(p) {
-        let str = "f(x) = ";
-        if (p.a === -1) str += "\u2212";
-        else if (p.a !== 1) str += p.a.toString();
-
-        if (p.k > 0) {
-            str += "x";
-            if (p.k > 1) str += superscript(p.k);
-        }
-
-        if (p.qCoeffs && p.m > 0) {
-            str += "(" + formatInner(p.qCoeffs) + ")";
-            if (p.m > 1) str += superscript(p.m);
-        }
-
-        return str;
-    }
-
-    function superscript(n) {
-        const sups = { '0': '\u2070', '1': '\u00B9', '2': '\u00B2', '3': '\u00B3',
-                       '4': '\u2074', '5': '\u2075', '6': '\u2076', '7': '\u2077',
-                       '8': '\u2078', '9': '\u2079' };
-        return n.toString().split('').map(c => sups[c] || c).join('');
-    }
-
-    function updateFormula() {
-        const box = document.getElementById("formulaBox");
-        box.style.color = "var(--gray-900)";
-        const factored = document.getElementById("factoredMode").checked;
-        box.textContent = factored ? formatFactored(poly) : formatStandard(poly.coeffs);
-    }
-
-    // --- Plot ---
-
-    function niceStep(range, maxTicks) {
-        const rough = range / maxTicks;
-        const mag = Math.pow(10, Math.floor(Math.log10(rough)));
-        const res = rough / mag;
-        let nice;
-        if (res <= 1.5) nice = 1;
-        else if (res <= 3) nice = 2;
-        else if (res <= 7) nice = 5;
-        else nice = 10;
-        return nice * mag;
-    }
-
-    function fmtTick(v) {
-        if (Math.abs(v) < 1e-10) return "0";
-        if (Math.abs(v - Math.round(v)) < 1e-10) return Math.round(v).toString();
-        return v.toFixed(1);
-    }
-
-    function computeYRange() {
-        const samples = 500;
-        let minY = Infinity, maxY = -Infinity;
-        for (let i = 0; i <= samples; i++) {
-            const x = xMin + (xMax - xMin) * i / samples;
-            const y = evalPoly(poly.coeffs, x);
-            if (isFinite(y)) {
-                if (y < minY) minY = y;
-                if (y > maxY) maxY = y;
-            }
-        }
-
-        // Also sample at roots and midpoints for accuracy
-        for (const { root } of poly.roots) {
-            const y = evalPoly(poly.coeffs, root);
-            if (y < minY) minY = y;
-            if (y > maxY) maxY = y;
-        }
-
-        const range = maxY - minY;
-        const pad = Math.max(range * 0.15, 2);
-        minY -= pad;
-        maxY += pad;
-
-        // Clamp to keep reasonable
-        const absMax = Math.max(Math.abs(minY), Math.abs(maxY));
-        if (absMax > 100) {
-            const scale = 50 / absMax;
-            minY = Math.max(minY, -50);
-            maxY = Math.min(maxY, 50);
-        }
-
-        return { minY, maxY };
-    }
-
-    function drawPlot() {
-        const dpr = window.devicePixelRatio || 1;
-        const rect = canvas.getBoundingClientRect();
-        canvas.width = rect.width * dpr;
-        canvas.height = rect.height * dpr;
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-        const w = rect.width, h = rect.height;
-        const pL = PADDING.left, pR = PADDING.right, pT = PADDING.top, pB = PADDING.bottom;
-        const pw = w - pL - pR, ph = h - pT - pB;
-
-        function d2c(dx, dy) {
-            return {
-                x: pL + (dx - xMin) / (xMax - xMin) * pw,
-                y: pT + (yMax - dy) / (yMax - yMin) * ph
-            };
-        }
-
-        ctx.clearRect(0, 0, w, h);
-        ctx.fillStyle = "#FAFBFC";
-        ctx.fillRect(pL, pT, pw, ph);
-
-        // Grid
-        const xStep = niceStep(xMax - xMin, 10);
-        const yStep = niceStep(yMax - yMin, 8);
-
-        ctx.font = "13px 'Segoe UI', system-ui, sans-serif";
-
-        // Vertical grid + X ticks
-        ctx.textAlign = "center";
-        ctx.textBaseline = "top";
-        let xTick = Math.ceil(xMin / xStep) * xStep;
-        while (xTick <= xMax) {
-            const cx = d2c(xTick, 0).x;
-            ctx.strokeStyle = "#E5E7EB";
-            ctx.lineWidth = 1;
-            ctx.setLineDash([]);
-            ctx.beginPath(); ctx.moveTo(cx, pT); ctx.lineTo(cx, pT + ph); ctx.stroke();
-            ctx.fillStyle = "#6B7280";
-            ctx.fillText(fmtTick(xTick), cx, pT + ph + 6);
-            xTick += xStep;
-        }
-
-        // Horizontal grid + Y ticks
-        ctx.textAlign = "right";
-        ctx.textBaseline = "middle";
-        let yTick = Math.ceil(yMin / yStep) * yStep;
-        while (yTick <= yMax) {
-            const cy = d2c(0, yTick).y;
-            ctx.strokeStyle = "#E5E7EB";
-            ctx.lineWidth = 1;
-            ctx.setLineDash([]);
-            ctx.beginPath(); ctx.moveTo(pL, cy); ctx.lineTo(pL + pw, cy); ctx.stroke();
-            ctx.fillStyle = "#6B7280";
-            ctx.fillText(fmtTick(yTick), pL - 8, cy);
-            yTick += yStep;
-        }
-
-        // Axis zero lines
-        ctx.strokeStyle = "rgba(0,0,0,0.3)";
-        ctx.lineWidth = 1.5;
-        ctx.setLineDash([]);
-        if (xMin <= 0 && xMax >= 0) {
-            const cx = d2c(0, 0).x;
-            ctx.beginPath(); ctx.moveTo(cx, pT); ctx.lineTo(cx, pT + ph); ctx.stroke();
-        }
-        if (yMin <= 0 && yMax >= 0) {
-            const cy = d2c(0, 0).y;
-            ctx.beginPath(); ctx.moveTo(pL, cy); ctx.lineTo(pL + pw, cy); ctx.stroke();
-        }
-
-        // Axis labels
-        ctx.fillStyle = "#374151";
-        ctx.font = "bold 14px 'Segoe UI', system-ui, sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "top";
-        ctx.fillText("x", pL + pw / 2, pT + ph + 30);
-        ctx.save();
-        ctx.translate(16, pT + ph / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.textBaseline = "middle";
-        ctx.fillText("f(x)", 0, 0);
-        ctx.restore();
-
-        // Curve - clip to plot area
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(pL, pT, pw, ph);
-        ctx.clip();
-
-        ctx.strokeStyle = "#3B82F6";
-        ctx.lineWidth = 3;
-        ctx.setLineDash([]);
-        ctx.beginPath();
-        const n = 1000;
-        let started = false;
-        for (let i = 0; i <= n; i++) {
-            const x = xMin + (xMax - xMin) * i / n;
-            const y = evalPoly(poly.coeffs, x);
-            const p = d2c(x, y);
-            if (!isFinite(y) || p.y < -500 || p.y > h + 500) {
-                started = false;
-                continue;
-            }
-            if (!started) { ctx.moveTo(p.x, p.y); started = true; }
-            else ctx.lineTo(p.x, p.y);
-        }
-        ctx.stroke();
-
-        // Solution dots at zeros
-        if (showSolutionDots) {
-            for (const { root, mult } of poly.roots) {
-                const p = d2c(root, 0);
-                ctx.fillStyle = "#EF4444";
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
-                ctx.fill();
-                ctx.fillStyle = "white";
-                ctx.font = "bold 10px 'Segoe UI', sans-serif";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.fillText(mult.toString(), p.x, p.y);
-            }
-        }
-
-        ctx.restore();
-    }
-
-    // --- Zero entry management ---
-
-    function createZeroEntry() {
-        const div = document.createElement("div");
-        div.className = "zero-entry";
-        div.innerHTML = '<span>x =</span> ' +
-            '<input type="text" class="zero-input" autocomplete="off"> ' +
-            '<span>mult:</span> ' +
-            '<select class="mult-select"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select> ' +
-            '<button class="btn-sm btn-remove">&times;</button>';
-        div.querySelector(".btn-remove").addEventListener("click", function() {
-            div.remove();
-        });
-        div.querySelector(".zero-input").addEventListener("keydown", function(e) {
-            if (e.key === "Enter") checkAnswer();
-        });
-        return div;
-    }
-
-    function addZeroEntry() {
-        document.getElementById("zerosContainer").appendChild(createZeroEntry());
-    }
-
-    function clearZeroEntries() {
-        const container = document.getElementById("zerosContainer");
-        container.innerHTML = "";
-        addZeroEntry();
-    }
-
-    function getUserZeros() {
-        const entries = document.querySelectorAll(".zero-entry");
-        const zeros = [];
-        for (const entry of entries) {
-            const input = entry.querySelector(".zero-input");
-            const select = entry.querySelector(".mult-select");
-            let val = input.value.trim().replace(",", ".");
-            if (val === "") continue;
-            if (val.includes("/")) {
-                const parts = val.split("/");
-                if (parts.length !== 2) return null;
-                const num = parseFloat(parts[0]);
-                const den = parseFloat(parts[1]);
-                if (isNaN(num) || isNaN(den) || Math.abs(den) < 0.0001) return null;
-                zeros.push({ root: num / den, mult: parseInt(select.value) });
-            } else {
-                const num = parseFloat(val);
-                if (isNaN(num)) return null;
-                zeros.push({ root: num, mult: parseInt(select.value) });
-            }
-        }
-        return zeros;
-    }
-
-    // --- Answer checking ---
-
-    function getCorrectBehavior() {
-        const deg = poly.degree;
-        const leadSign = poly.a > 0 ? 1 : -1;
-        if (deg % 2 === 1) {
-            return leadSign > 0 ? "bl-tr" : "tl-br";
-        } else {
-            return leadSign > 0 ? "tl-tr" : "bl-br";
-        }
-    }
-
-    function checkAnswer() {
-        const fb = document.getElementById("feedback");
-        const errors = [];
-
-        // Check end behavior
-        const selectedRadio = document.querySelector('input[name="behavior"]:checked');
-        if (!selectedRadio) {
-            errors.push("Please select an end behavior.");
-        } else if (selectedRadio.value !== getCorrectBehavior()) {
-            errors.push("End behavior is incorrect.");
-        }
-
-        // Check zeros
-        const userZeros = getUserZeros();
-        if (userZeros === null) {
-            errors.push("Invalid zero value. Use integers, decimals, or fractions like 3/2.");
-        } else {
-            const actual = poly.roots.map(f => ({ root: f.root, mult: f.mult }));
-            const matched = new Array(actual.length).fill(false);
-            const extraZeros = [];
-            let allFound = true;
-
-            for (const uz of userZeros) {
-                let found = false;
-                for (let i = 0; i < actual.length; i++) {
-                    if (!matched[i] && Math.abs(uz.root - actual[i].root) < 0.05 && uz.mult === actual[i].mult) {
-                        matched[i] = true;
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    // Check if root is right but multiplicity wrong
-                    let rootFound = false;
-                    for (let i = 0; i < actual.length; i++) {
-                        if (!matched[i] && Math.abs(uz.root - actual[i].root) < 0.05) {
-                            rootFound = true;
-                            break;
-                        }
-                    }
-                    if (rootFound) {
-                        errors.push("Zero x = " + uz.root + " has the wrong multiplicity.");
-                    } else {
-                        errors.push("x = " + uz.root + " is not a zero.");
-                    }
-                }
-            }
-
-            for (let i = 0; i < actual.length; i++) {
-                if (!matched[i]) {
-                    errors.push("Missing zero at x = " + actual[i].root + ".");
-                }
-            }
-        }
-
-        total++;
-        if (errors.length === 0) {
-            score++;
-            fb.textContent = "Correct! Well done!";
-            fb.style.color = "#10B981";
-        } else {
-            fb.innerHTML = errors.join("<br>");
-            fb.style.color = "#EF4444";
-        }
-        document.getElementById("scoreText").textContent = "Score: " + score + " / " + total;
-    }
-
-    function showSolution() {
-        showSolutionDots = true;
-        document.getElementById("graphSection").style.display = "block";
-        document.getElementById("btnShowGraph").textContent = "Hide Graph";
-        drawPlot();
-
-        const beh = getCorrectBehavior();
-        const behNames = {
-            "bl-tr": "Bottom-left \u2192 Top-right",
-            "tl-br": "Top-left \u2192 Bottom-right",
-            "tl-tr": "Top-left \u2192 Top-right",
-            "bl-br": "Bottom-left \u2192 Bottom-right"
-        };
-
-        let text = "End behavior: " + behNames[beh] + "\n";
-        text += "Zeros: " + poly.roots.map(f => "x = " + f.root + " (mult " + f.mult + ")").join(",  ");
-        text += "\n" + formatFactored(poly);
-
-        document.getElementById("solutionText").textContent = text;
-    }
-
-    // --- New problem ---
-
-    function newProblem() {
-        poly = generatePolynomial();
-        showSolutionDots = false;
-
-        // Compute ranges
-        const roots = poly.roots.map(f => f.root);
-        const minRoot = Math.min(...roots);
-        const maxRoot = Math.max(...roots);
-        xMin = Math.min(-5, minRoot - 2);
-        xMax = Math.max(5, maxRoot + 2);
-
-        const yr = computeYRange();
-        yMin = yr.minY;
-        yMax = yr.maxY;
-
-        // Reset UI
-        document.querySelectorAll('input[name="behavior"]').forEach(r => r.checked = false);
-        document.querySelectorAll('.behavior-option').forEach(el => el.classList.remove('selected'));
-        clearZeroEntries();
-        document.getElementById("feedback").textContent = "";
-        document.getElementById("feedback").innerHTML = "";
-        document.getElementById("solutionText").textContent = "";
-
-        document.getElementById("graphSection").style.display = "none";
-        document.getElementById("btnShowGraph").textContent = "Show Graph";
-
-        updateFormula();
-    }
-
-    // --- Event wiring ---
-
-    document.getElementById("btnCheck").addEventListener("click", checkAnswer);
-    document.getElementById("btnNew").addEventListener("click", newProblem);
-    document.getElementById("btnSolution").addEventListener("click", showSolution);
-    document.getElementById("btnAddZero").addEventListener("click", addZeroEntry);
-    document.getElementById("factoredMode").addEventListener("change", updateFormula);
-
-    document.getElementById("btnShowGraph").addEventListener("click", function() {
-        const section = document.getElementById("graphSection");
-        const btn = document.getElementById("btnShowGraph");
-        if (section.style.display === "none") {
-            section.style.display = "block";
-            btn.textContent = "Hide Graph";
-            drawPlot();
-        } else {
-            section.style.display = "none";
-            btn.textContent = "Show Graph";
-        }
-    });
-
-    // Behavior option selection styling
-    document.querySelectorAll('.behavior-option').forEach(function(opt) {
-        opt.addEventListener("click", function() {
-            document.querySelectorAll('.behavior-option').forEach(el => el.classList.remove('selected'));
-            opt.classList.add('selected');
-        });
-    });
-
-    window.addEventListener("resize", drawPlot);
-
-    // --- Init ---
-    newProblem();
-})();
-</script>
+<div class="container">
+
+    <!-- FEATURES -->
+    <section style="margin-top: 3rem;">
+        <h2>Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <strong>Random Polynomial Generation</strong>
+                <p>Each click of <em>New Problem</em> produces a fresh polynomial (degree 2&ndash;5) with randomised parameters and integer roots.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Two Display Modes</strong>
+                <p>Toggle between <strong>standard form</strong> (fully expanded) and <strong>factored form</strong> to practise at different difficulty levels.</p>
+            </div>
+            <div class="feature-card">
+                <strong>End Behaviour Exercise</strong>
+                <p>Select how the graph behaves at the far left and far right &mdash; four options cover all combinations of rising and falling ends.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Zeros &amp; Multiplicities</strong>
+                <p>Enter each zero and its multiplicity. The tool checks your answers and tells you exactly what&rsquo;s wrong.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Graph on Demand</strong>
+                <p>The graph is hidden by default &mdash; work from the formula first, then reveal the plot to verify your answer.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Solution Reveal</strong>
+                <p>Click <em>Show Solution</em> to see all zeros highlighted with red dots on the graph, plus the correct end behaviour.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Fraction &amp; Decimal Input</strong>
+                <p>Answers can be entered as integers (<code>3</code>), decimals (<code>1.5</code>), or fractions (<code>3/2</code>).</p>
+            </div>
+            <div class="feature-card">
+                <strong>Score Tracking</strong>
+                <p>Keeps a running score of correct answers vs. total attempts across the session.</p>
+            </div>
+            <div class="feature-card">
+                <strong>No Installation</strong>
+                <p>Pure HTML/CSS/JavaScript &mdash; runs in any modern browser. No download, no setup, no dependencies.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- POLYNOMIAL STRUCTURE -->
+    <section>
+        <h2>Polynomial Structure</h2>
+        <p>Each generated polynomial has the form:</p>
+        <div style="text-align: center; font-family: 'Cambria Math', Georgia, serif; font-size: 1.3rem; margin: 1rem 0; padding: 0.75rem; background: white; border-radius: 8px; border: 1px solid var(--gray-200);">
+            f(x) = <span style="color:var(--red); font-weight: 700;">a</span> &middot; x<sup><span style="color:var(--orange); font-weight: 700;">k</span></sup> &middot; (<span style="color:var(--green); font-weight: 700;">bx&sup2; + cx + d</span>)<sup><span style="color:var(--purple); font-weight: 700;">m</span></sup>
+        </div>
+        <table>
+            <thead>
+                <tr><th>Component</th><th>Description</th><th>Range</th></tr>
+            </thead>
+            <tbody>
+                <tr><td style="color:var(--red); font-weight: 700;">a</td><td>Leading coefficient</td><td>&minus;3, &minus;2, &minus;1, 1, 2, 3</td></tr>
+                <tr><td style="color:var(--orange); font-weight: 700;">k</td><td>Power of x (root at 0 with multiplicity k)</td><td>0 to degree</td></tr>
+                <tr><td style="color:var(--green); font-weight: 700;">bx&sup2; + cx + d</td><td>Inner factor (quadratic or linear, monic, integer roots)</td><td>Roots in [&minus;4, 4]</td></tr>
+                <tr><td style="color:var(--purple); font-weight: 700;">m</td><td>Power of the inner factor</td><td>0, 1, 2, or 3</td></tr>
+                <tr><td style="font-weight: 700;">Degree</td><td>Total degree: k + deg(inner) &middot; m</td><td>2 to 5</td></tr>
+            </tbody>
+        </table>
+        <div class="note">
+            <strong>Design goal:</strong> The inner factor always has &ldquo;nice&rdquo; integer roots so students can solve by factoring or the quadratic formula without a calculator.
+        </div>
+    </section>
+
+    <!-- HOW TO USE -->
+    <section>
+        <h2>How to Use</h2>
+
+        <h3>1. Read the Formula</h3>
+        <p>When the app starts (or after clicking <strong>New Problem</strong>), a polynomial formula is displayed. Toggle between standard (expanded) form and factored form with the checkbox.</p>
+
+        <h3>2. Determine End Behaviour</h3>
+        <p>Look at the <strong>degree</strong> and the <strong>sign of the leading coefficient</strong>:</p>
+        <ul class="tip-list">
+            <li><strong>Odd degree, positive lead</strong> &rarr; bottom-left to top-right &#8599;</li>
+            <li><strong>Odd degree, negative lead</strong> &rarr; top-left to bottom-right &#8600;</li>
+            <li><strong>Even degree, positive lead</strong> &rarr; top-left to top-right &#8613;</li>
+            <li><strong>Even degree, negative lead</strong> &rarr; bottom-left to bottom-right &#8615;</li>
+        </ul>
+
+        <h3>3. Find the Zeros</h3>
+        <p>Set each factor equal to zero and solve:</p>
+        <ul class="tip-list">
+            <li><strong>x<sup>k</sup> = 0</strong> &rarr; root at x = 0 with multiplicity k</li>
+            <li><strong>bx&sup2; + cx + d = 0</strong> &rarr; factor or use the quadratic formula; each root has multiplicity m</li>
+            <li>If the inner quadratic has a repeated root, its multiplicity doubles to 2m</li>
+        </ul>
+        <p>Add zero entries using the <strong>+ Add zero</strong> button and select the correct multiplicity for each.</p>
+
+        <h3>4. Check Your Answer</h3>
+        <ul class="tip-list">
+            <li>Press <strong>Enter</strong> or click <strong>Check Answer</strong> to verify.</li>
+            <li><strong style="color:var(--green)">Correct</strong> &mdash; green confirmation, score increases.</li>
+            <li><strong style="color:var(--red)">Incorrect</strong> &mdash; the tool tells you which zeros are wrong or missing.</li>
+        </ul>
+
+        <h3>5. Reveal the Graph</h3>
+        <p>Click <strong>Show Graph</strong> to visualise the polynomial and verify your analysis. Click <strong>Show Solution</strong> to see the zeros highlighted with red dots on the plot.</p>
+    </section>
+
+    <!-- TECH STACK -->
+    <section>
+        <h2>Tech Stack</h2>
+        <div class="tech-badges">
+            <span class="badge">Vanilla JavaScript</span>
+            <span class="badge">HTML5 Canvas</span>
+            <span class="badge">CSS3</span>
+            <span class="badge">No Dependencies</span>
+            <span class="badge">GitHub Pages</span>
+        </div>
+        <p style="margin-top: 1rem;">The entire application is a single HTML file &mdash; no build step, no framework, no server required.</p>
+    </section>
+
+    <!-- PROJECT STRUCTURE -->
+    <section>
+        <h2>Project Structure</h2>
+        <pre><code>PolynomialTrainer/
+&#9500;&#9472;&#9472; app.html         The web application (single file)
+&#9500;&#9472;&#9472; index.html       This project website
+&#9500;&#9472;&#9472; README.md        Documentation
+&#9500;&#9472;&#9472; LICENSE          MIT License
+&#9492;&#9472;&#9472; .gitignore</code></pre>
+    </section>
+
+    <!-- LICENSE -->
+    <section>
+        <h2>License</h2>
+        <p><a href="https://github.com/holgerschl/PolynomialTrainer/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a> &mdash; free to use, modify, and distribute.</p>
+        <p><strong>Privacy policy:</strong> This application runs entirely in your browser. No data is collected, transmitted, or stored on any server.</p>
+    </section>
+
+    <!-- GITHUB SIGNUP -->
+    <section>
+        <h2>Create a Free GitHub Account</h2>
+        <p>To leave a comment below you need a (free) GitHub account. If you don&rsquo;t have one yet, it only takes a minute to sign up:</p>
+        <ol class="steps">
+            <li>Go to the GitHub registration page:<br>
+                <a class="download-btn" href="https://github.com/signup" target="_blank" rel="noopener">Sign up at GitHub</a>
+            </li>
+            <li>Enter your <strong>email address</strong>, choose a <strong>password</strong> and a <strong>username</strong>.</li>
+            <li>Complete the short verification puzzle and confirm your email.</li>
+        </ol>
+        <p>That&rsquo;s it &mdash; you can now sign in to leave comments and feedback.</p>
+    </section>
+
+    <!-- COMMENTS -->
+    <section>
+        <h2>Comments &amp; Feedback</h2>
+        <p>Have a question, suggestion, or found a bug? Leave a comment below &mdash; sign in with your GitHub account to post.</p>
+        <div class="giscus-wrapper">
+            <script src="https://giscus.app/client.js"
+                    data-repo="holgerschl/PolynomialTrainer"
+                    data-repo-id=""
+                    data-category="General"
+                    data-category-id=""
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="top"
+                    data-theme="light"
+                    data-lang="en"
+                    data-loading="lazy"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+        </div>
+        <div class="note">
+            <strong>Note:</strong> The comment section uses <a href="https://giscus.app" target="_blank" rel="noopener">Giscus</a>, powered by GitHub Discussions. You need to enable Discussions on the repository and configure the repo/category IDs above for comments to appear.
+        </div>
+    </section>
+
+</div>
+
+<footer>
+    Polynomial Trainer &mdash; MIT License &mdash; free to use, modify, and distribute.<br>
+    Also check out the <a href="https://holgerschl.github.io/SineParameterTrainer/" target="_blank" rel="noopener" style="color: var(--purple); font-weight: 600;">Sine Parameter Trainer</a> for practising sine function parameters.
+</footer>
 
 </body>
 </html>

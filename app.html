@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polynomial Trainer</title>
+    <style>
+        :root {
+            --blue: #3B82F6;
+            --green: #10B981;
+            --red: #EF4444;
+            --orange: #F59E0B;
+            --purple: #8B5CF6;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-500: #6B7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #F0F2F5;
+            color: var(--gray-700);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1E3A8A 0%, var(--blue) 100%);
+            color: white;
+            padding: 1.25rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; }
+        .header p { font-size: 0.95rem; opacity: 0.85; margin-top: 0.2rem; }
+
+        .main { max-width: 1100px; margin: 1rem auto; padding: 0 1rem; }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Mode toggle */
+        .mode-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+
+        .mode-row label {
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            user-select: none;
+        }
+
+        .mode-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--blue);
+        }
+
+        /* Formula display */
+        .formula-box {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            font-size: 1.15rem;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-weight: 600;
+            color: var(--gray-900);
+            min-height: 2.2rem;
+            margin-bottom: 0.75rem;
+            overflow-x: auto;
+        }
+
+        /* End behavior */
+        .behavior-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .behavior-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            user-select: none;
+        }
+
+        .behavior-option:hover { border-color: var(--blue); background: #EFF6FF; }
+        .behavior-option.selected { border-color: var(--blue); background: #DBEAFE; }
+
+        .behavior-option input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--blue);
+        }
+
+        .arrow-icon {
+            font-size: 1.4rem;
+            line-height: 1;
+            width: 1.8rem;
+            text-align: center;
+        }
+
+        .behavior-label { font-size: 0.88rem; font-weight: 600; }
+
+        /* Zeros section */
+        .zero-entry {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .zero-entry span { font-weight: 600; font-size: 0.95rem; }
+
+        .zero-entry input[type="text"] {
+            width: 60px;
+            padding: 0.35rem 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            border: none;
+            border-bottom: 2px solid var(--gray-200);
+            outline: none;
+            background: transparent;
+            transition: border-color 0.2s;
+        }
+
+        .zero-entry input[type="text"]:focus { border-bottom-color: var(--blue); }
+
+        .zero-entry select {
+            padding: 0.35rem 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .zero-entry select:focus { border-color: var(--blue); }
+
+        .btn-sm {
+            padding: 0.25rem 0.6rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            transition: opacity 0.2s;
+        }
+
+        .btn-sm:hover { opacity: 0.85; }
+        .btn-remove { background: var(--red); }
+        .btn-add { background: var(--blue); margin-top: 0.25rem; }
+
+        /* Buttons */
+        .buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover { opacity: 0.85; }
+        .btn-blue { background: var(--blue); }
+        .btn-green { background: var(--green); }
+        .btn-orange { background: var(--orange); }
+
+        .feedback {
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: 600;
+            min-height: 1.6rem;
+            padding: 0.4rem 0;
+        }
+
+        .solution {
+            text-align: center;
+            font-family: 'Consolas', 'Cascadia Code', monospace;
+            font-size: 0.95rem;
+            color: var(--purple);
+            min-height: 1.4rem;
+            white-space: pre-wrap;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--gray-700);
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--gray-200);
+            margin: 0.75rem 0;
+        }
+
+        @media (max-width: 640px) {
+            .header h1 { font-size: 1.3rem; }
+            .behavior-grid { grid-template-columns: 1fr; }
+            .zero-entry input[type="text"] { width: 50px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Polynomial Trainer</h1>
+    <p>Determine end behavior and zeros of polynomial functions from the formula</p>
+</div>
+
+<div class="main">
+    <!-- Mode & Plot -->
+    <div class="card">
+        <div class="mode-row">
+            <label><input type="checkbox" id="factoredMode"> Show in factored form (easier)</label>
+        </div>
+        <div class="formula-box" id="formulaBox"></div>
+        <div id="graphSection" style="display: none;">
+            <canvas id="plotCanvas" width="1060" height="480"></canvas>
+        </div>
+        <div style="margin-top: 0.75rem; text-align: center;">
+            <button class="btn btn-blue" id="btnShowGraph" style="padding: 0.6rem 2rem; font-size: 1rem;">Show Graph</button>
+        </div>
+    </div>
+
+    <!-- Exercises -->
+    <div class="card">
+        <div class="section-title">1. End Behavior</div>
+        <div class="behavior-grid" id="behaviorGrid">
+            <label class="behavior-option" data-value="bl-tr">
+                <input type="radio" name="behavior" value="bl-tr">
+                <span class="arrow-icon">&#8599;</span>
+                <span class="behavior-label">Bottom-left &rarr; Top-right</span>
+            </label>
+            <label class="behavior-option" data-value="tl-br">
+                <input type="radio" name="behavior" value="tl-br">
+                <span class="arrow-icon">&#8600;</span>
+                <span class="behavior-label">Top-left &rarr; Bottom-right</span>
+            </label>
+            <label class="behavior-option" data-value="tl-tr">
+                <input type="radio" name="behavior" value="tl-tr">
+                <span class="arrow-icon">&#8613;</span>
+                <span class="behavior-label">Top-left &rarr; Top-right</span>
+            </label>
+            <label class="behavior-option" data-value="bl-br">
+                <input type="radio" name="behavior" value="bl-br">
+                <span class="arrow-icon">&#8615;</span>
+                <span class="behavior-label">Bottom-left &rarr; Bottom-right</span>
+            </label>
+        </div>
+
+        <hr class="divider">
+
+        <div class="section-title">2. Zeros and Multiplicities</div>
+        <div id="zerosContainer"></div>
+        <button class="btn-sm btn-add" id="btnAddZero">+ Add zero</button>
+
+        <hr class="divider">
+
+        <div class="buttons-row">
+            <button class="btn btn-blue" id="btnCheck">Check Answer</button>
+            <button class="btn btn-green" id="btnNew">New Problem</button>
+            <button class="btn btn-orange" id="btnSolution">Show Solution</button>
+        </div>
+
+        <div class="feedback" id="feedback"></div>
+        <div class="solution" id="solutionText"></div>
+        <div class="score" id="scoreText">Score: 0 / 0</div>
+    </div>
+</div>
+
+<script>
+(function() {
+    "use strict";
+
+    const canvas = document.getElementById("plotCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let poly = null; // { a, k, m, c, n, degree, coeffs, roots: [{root, mult}] }
+    let score = 0, total = 0;
+    let showSolutionDots = false;
+
+    const PADDING = { top: 20, right: 30, bottom: 50, left: 60 };
+    let xMin, xMax, yMin, yMax;
+
+    // --- Polynomial generation ---
+
+    function randInt(min, max) {
+        return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function pickRandom(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function generatePolynomial() {
+        const degree = randInt(2, 6);
+
+        // Structure: a * x^k * (bx² + cx + d)^m, where k + qDeg*m = degree
+        const combos = [];
+        combos.push({ k: degree, qDeg: 0, m: 0 });
+        for (let m = 1; m <= 3; m++) {
+            const k = degree - m;
+            if (k >= 0) combos.push({ k, qDeg: 1, m });
+        }
+        for (let m = 1; m <= 3; m++) {
+            const k = degree - 2 * m;
+            if (k >= 0) combos.push({ k, qDeg: 2, m });
+        }
+
+        const combo = pickRandom(combos);
+        const pool = [-4, -3, -2, -1, 1, 2, 3, 4];
+
+        let qCoeffs = null;
+        const rootMap = {};
+
+        if (combo.k > 0) rootMap[0] = combo.k;
+
+        if (combo.qDeg === 1) {
+            const r = pickRandom(pool);
+            qCoeffs = [-r, 1];
+            rootMap[r] = (rootMap[r] || 0) + combo.m;
+        } else if (combo.qDeg === 2) {
+            const r1 = pickRandom(pool);
+            const r2 = pickRandom(pool);
+            qCoeffs = [r1 * r2, -(r1 + r2), 1];
+            if (r1 === r2) {
+                rootMap[r1] = (rootMap[r1] || 0) + 2 * combo.m;
+            } else {
+                rootMap[r1] = (rootMap[r1] || 0) + combo.m;
+                rootMap[r2] = (rootMap[r2] || 0) + combo.m;
+            }
+        }
+
+        const roots = Object.keys(rootMap)
+            .map(r => ({ root: parseFloat(r), mult: rootMap[r] }))
+            .sort((a, b) => a.root - b.root);
+
+        const a = pickRandom([-3, -2, -1, 1, 2, 3]);
+
+        let coeffs = [a];
+        if (combo.k > 0) {
+            const xk = new Array(combo.k + 1).fill(0);
+            xk[combo.k] = 1;
+            coeffs = multiplyPoly(coeffs, xk);
+        }
+        if (qCoeffs && combo.m > 0) {
+            for (let i = 0; i < combo.m; i++) {
+                coeffs = multiplyPoly(coeffs, qCoeffs);
+            }
+        }
+
+        return { a, k: combo.k, qDeg: combo.qDeg, qCoeffs, m: combo.m, degree, coeffs, roots };
+    }
+
+    function multiplyPoly(a, b) {
+        const result = new Array(a.length + b.length - 1).fill(0);
+        for (let i = 0; i < a.length; i++) {
+            for (let j = 0; j < b.length; j++) {
+                result[i + j] += a[i] * b[j];
+            }
+        }
+        return result;
+    }
+
+    function evalPoly(coeffs, x) {
+        let val = 0;
+        for (let i = coeffs.length - 1; i >= 0; i--) {
+            val = val * x + coeffs[i];
+        }
+        return val;
+    }
+
+    // --- Formula display ---
+
+    function formatStandard(coeffs) {
+        const deg = coeffs.length - 1;
+        let parts = [];
+        for (let i = deg; i >= 0; i--) {
+            const c = coeffs[i];
+            if (Math.abs(c) < 1e-10) continue;
+            let term = "";
+            const absC = Math.abs(c);
+
+            if (i === 0) {
+                term = Math.round(absC).toString();
+            } else if (i === 1) {
+                term = (absC === 1 ? "" : Math.round(absC).toString()) + "x";
+            } else {
+                term = (absC === 1 ? "" : Math.round(absC).toString()) + "x" + superscript(i);
+            }
+
+            if (parts.length === 0) {
+                parts.push(c < 0 ? "\u2212" + term : term);
+            } else {
+                parts.push(c < 0 ? " \u2212 " + term : " + " + term);
+            }
+        }
+        return "f(x) = " + (parts.length > 0 ? parts.join("") : "0");
+    }
+
+    function formatInner(qCoeffs) {
+        const deg = qCoeffs.length - 1;
+        let parts = [];
+        for (let i = deg; i >= 0; i--) {
+            const c = qCoeffs[i];
+            if (Math.abs(c) < 1e-10) continue;
+            const absC = Math.abs(c);
+            let term = "";
+            if (i === 0) term = Math.round(absC).toString();
+            else if (i === 1) term = (absC === 1 ? "" : Math.round(absC).toString()) + "x";
+            else term = (absC === 1 ? "" : Math.round(absC).toString()) + "x" + superscript(i);
+            if (parts.length === 0) parts.push(c < 0 ? "\u2212" + term : term);
+            else parts.push(c < 0 ? " \u2212 " + term : " + " + term);
+        }
+        return parts.join("");
+    }
+
+    function formatFactored(p) {
+        let str = "f(x) = ";
+        if (p.a === -1) str += "\u2212";
+        else if (p.a !== 1) str += p.a.toString();
+
+        if (p.k > 0) {
+            str += "x";
+            if (p.k > 1) str += superscript(p.k);
+        }
+
+        if (p.qCoeffs && p.m > 0) {
+            str += "(" + formatInner(p.qCoeffs) + ")";
+            if (p.m > 1) str += superscript(p.m);
+        }
+
+        return str;
+    }
+
+    function superscript(n) {
+        const sups = { '0': '\u2070', '1': '\u00B9', '2': '\u00B2', '3': '\u00B3',
+                       '4': '\u2074', '5': '\u2075', '6': '\u2076', '7': '\u2077',
+                       '8': '\u2078', '9': '\u2079' };
+        return n.toString().split('').map(c => sups[c] || c).join('');
+    }
+
+    function updateFormula() {
+        const box = document.getElementById("formulaBox");
+        box.style.color = "var(--gray-900)";
+        const factored = document.getElementById("factoredMode").checked;
+        box.textContent = factored ? formatFactored(poly) : formatStandard(poly.coeffs);
+    }
+
+    // --- Plot ---
+
+    function niceStep(range, maxTicks) {
+        const rough = range / maxTicks;
+        const mag = Math.pow(10, Math.floor(Math.log10(rough)));
+        const res = rough / mag;
+        let nice;
+        if (res <= 1.5) nice = 1;
+        else if (res <= 3) nice = 2;
+        else if (res <= 7) nice = 5;
+        else nice = 10;
+        return nice * mag;
+    }
+
+    function fmtTick(v) {
+        if (Math.abs(v) < 1e-10) return "0";
+        if (Math.abs(v - Math.round(v)) < 1e-10) return Math.round(v).toString();
+        return v.toFixed(1);
+    }
+
+    function computeYRange() {
+        const samples = 500;
+        let minY = Infinity, maxY = -Infinity;
+        for (let i = 0; i <= samples; i++) {
+            const x = xMin + (xMax - xMin) * i / samples;
+            const y = evalPoly(poly.coeffs, x);
+            if (isFinite(y)) {
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+            }
+        }
+
+        // Also sample at roots and midpoints for accuracy
+        for (const { root } of poly.roots) {
+            const y = evalPoly(poly.coeffs, root);
+            if (y < minY) minY = y;
+            if (y > maxY) maxY = y;
+        }
+
+        const range = maxY - minY;
+        const pad = Math.max(range * 0.15, 2);
+        minY -= pad;
+        maxY += pad;
+
+        // Clamp to keep reasonable
+        const absMax = Math.max(Math.abs(minY), Math.abs(maxY));
+        if (absMax > 100) {
+            const scale = 50 / absMax;
+            minY = Math.max(minY, -50);
+            maxY = Math.min(maxY, 50);
+        }
+
+        return { minY, maxY };
+    }
+
+    function drawPlot() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const w = rect.width, h = rect.height;
+        const pL = PADDING.left, pR = PADDING.right, pT = PADDING.top, pB = PADDING.bottom;
+        const pw = w - pL - pR, ph = h - pT - pB;
+
+        function d2c(dx, dy) {
+            return {
+                x: pL + (dx - xMin) / (xMax - xMin) * pw,
+                y: pT + (yMax - dy) / (yMax - yMin) * ph
+            };
+        }
+
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = "#FAFBFC";
+        ctx.fillRect(pL, pT, pw, ph);
+
+        // Grid
+        const xStep = niceStep(xMax - xMin, 10);
+        const yStep = niceStep(yMax - yMin, 8);
+
+        ctx.font = "13px 'Segoe UI', system-ui, sans-serif";
+
+        // Vertical grid + X ticks
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        let xTick = Math.ceil(xMin / xStep) * xStep;
+        while (xTick <= xMax) {
+            const cx = d2c(xTick, 0).x;
+            ctx.strokeStyle = "#E5E7EB";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([]);
+            ctx.beginPath(); ctx.moveTo(cx, pT); ctx.lineTo(cx, pT + ph); ctx.stroke();
+            ctx.fillStyle = "#6B7280";
+            ctx.fillText(fmtTick(xTick), cx, pT + ph + 6);
+            xTick += xStep;
+        }
+
+        // Horizontal grid + Y ticks
+        ctx.textAlign = "right";
+        ctx.textBaseline = "middle";
+        let yTick = Math.ceil(yMin / yStep) * yStep;
+        while (yTick <= yMax) {
+            const cy = d2c(0, yTick).y;
+            ctx.strokeStyle = "#E5E7EB";
+            ctx.lineWidth = 1;
+            ctx.setLineDash([]);
+            ctx.beginPath(); ctx.moveTo(pL, cy); ctx.lineTo(pL + pw, cy); ctx.stroke();
+            ctx.fillStyle = "#6B7280";
+            ctx.fillText(fmtTick(yTick), pL - 8, cy);
+            yTick += yStep;
+        }
+
+        // Axis zero lines
+        ctx.strokeStyle = "rgba(0,0,0,0.3)";
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([]);
+        if (xMin <= 0 && xMax >= 0) {
+            const cx = d2c(0, 0).x;
+            ctx.beginPath(); ctx.moveTo(cx, pT); ctx.lineTo(cx, pT + ph); ctx.stroke();
+        }
+        if (yMin <= 0 && yMax >= 0) {
+            const cy = d2c(0, 0).y;
+            ctx.beginPath(); ctx.moveTo(pL, cy); ctx.lineTo(pL + pw, cy); ctx.stroke();
+        }
+
+        // Axis labels
+        ctx.fillStyle = "#374151";
+        ctx.font = "bold 14px 'Segoe UI', system-ui, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText("x", pL + pw / 2, pT + ph + 30);
+        ctx.save();
+        ctx.translate(16, pT + ph / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.textBaseline = "middle";
+        ctx.fillText("f(x)", 0, 0);
+        ctx.restore();
+
+        // Curve - clip to plot area
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(pL, pT, pw, ph);
+        ctx.clip();
+
+        ctx.strokeStyle = "#3B82F6";
+        ctx.lineWidth = 3;
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        const n = 1000;
+        let started = false;
+        for (let i = 0; i <= n; i++) {
+            const x = xMin + (xMax - xMin) * i / n;
+            const y = evalPoly(poly.coeffs, x);
+            const p = d2c(x, y);
+            if (!isFinite(y) || p.y < -500 || p.y > h + 500) {
+                started = false;
+                continue;
+            }
+            if (!started) { ctx.moveTo(p.x, p.y); started = true; }
+            else ctx.lineTo(p.x, p.y);
+        }
+        ctx.stroke();
+
+        // Solution dots at zeros
+        if (showSolutionDots) {
+            for (const { root, mult } of poly.roots) {
+                const p = d2c(root, 0);
+                ctx.fillStyle = "#EF4444";
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.fillStyle = "white";
+                ctx.font = "bold 10px 'Segoe UI', sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(mult.toString(), p.x, p.y);
+            }
+        }
+
+        ctx.restore();
+    }
+
+    // --- Zero entry management ---
+
+    function createZeroEntry() {
+        const div = document.createElement("div");
+        div.className = "zero-entry";
+        div.innerHTML = '<span>x =</span> ' +
+            '<input type="text" class="zero-input" autocomplete="off"> ' +
+            '<span>mult:</span> ' +
+            '<select class="mult-select"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select> ' +
+            '<button class="btn-sm btn-remove">&times;</button>';
+        div.querySelector(".btn-remove").addEventListener("click", function() {
+            div.remove();
+        });
+        div.querySelector(".zero-input").addEventListener("keydown", function(e) {
+            if (e.key === "Enter") checkAnswer();
+        });
+        return div;
+    }
+
+    function addZeroEntry() {
+        document.getElementById("zerosContainer").appendChild(createZeroEntry());
+    }
+
+    function clearZeroEntries() {
+        const container = document.getElementById("zerosContainer");
+        container.innerHTML = "";
+        addZeroEntry();
+    }
+
+    function getUserZeros() {
+        const entries = document.querySelectorAll(".zero-entry");
+        const zeros = [];
+        for (const entry of entries) {
+            const input = entry.querySelector(".zero-input");
+            const select = entry.querySelector(".mult-select");
+            let val = input.value.trim().replace(",", ".");
+            if (val === "") continue;
+            if (val.includes("/")) {
+                const parts = val.split("/");
+                if (parts.length !== 2) return null;
+                const num = parseFloat(parts[0]);
+                const den = parseFloat(parts[1]);
+                if (isNaN(num) || isNaN(den) || Math.abs(den) < 0.0001) return null;
+                zeros.push({ root: num / den, mult: parseInt(select.value) });
+            } else {
+                const num = parseFloat(val);
+                if (isNaN(num)) return null;
+                zeros.push({ root: num, mult: parseInt(select.value) });
+            }
+        }
+        return zeros;
+    }
+
+    // --- Answer checking ---
+
+    function getCorrectBehavior() {
+        const deg = poly.degree;
+        const leadSign = poly.a > 0 ? 1 : -1;
+        if (deg % 2 === 1) {
+            return leadSign > 0 ? "bl-tr" : "tl-br";
+        } else {
+            return leadSign > 0 ? "tl-tr" : "bl-br";
+        }
+    }
+
+    function checkAnswer() {
+        const fb = document.getElementById("feedback");
+        const errors = [];
+
+        // Check end behavior
+        const selectedRadio = document.querySelector('input[name="behavior"]:checked');
+        if (!selectedRadio) {
+            errors.push("Please select an end behavior.");
+        } else if (selectedRadio.value !== getCorrectBehavior()) {
+            errors.push("End behavior is incorrect.");
+        }
+
+        // Check zeros
+        const userZeros = getUserZeros();
+        if (userZeros === null) {
+            errors.push("Invalid zero value. Use integers, decimals, or fractions like 3/2.");
+        } else {
+            const actual = poly.roots.map(f => ({ root: f.root, mult: f.mult }));
+            const matched = new Array(actual.length).fill(false);
+            const extraZeros = [];
+            let allFound = true;
+
+            for (const uz of userZeros) {
+                let found = false;
+                for (let i = 0; i < actual.length; i++) {
+                    if (!matched[i] && Math.abs(uz.root - actual[i].root) < 0.05 && uz.mult === actual[i].mult) {
+                        matched[i] = true;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    // Check if root is right but multiplicity wrong
+                    let rootFound = false;
+                    for (let i = 0; i < actual.length; i++) {
+                        if (!matched[i] && Math.abs(uz.root - actual[i].root) < 0.05) {
+                            rootFound = true;
+                            break;
+                        }
+                    }
+                    if (rootFound) {
+                        errors.push("Zero x = " + uz.root + " has the wrong multiplicity.");
+                    } else {
+                        errors.push("x = " + uz.root + " is not a zero.");
+                    }
+                }
+            }
+
+            for (let i = 0; i < actual.length; i++) {
+                if (!matched[i]) {
+                    errors.push("Missing zero at x = " + actual[i].root + ".");
+                }
+            }
+        }
+
+        total++;
+        if (errors.length === 0) {
+            score++;
+            fb.textContent = "Correct! Well done!";
+            fb.style.color = "#10B981";
+        } else {
+            fb.innerHTML = errors.join("<br>");
+            fb.style.color = "#EF4444";
+        }
+        document.getElementById("scoreText").textContent = "Score: " + score + " / " + total;
+    }
+
+    function showSolution() {
+        showSolutionDots = true;
+        document.getElementById("graphSection").style.display = "block";
+        document.getElementById("btnShowGraph").textContent = "Hide Graph";
+        drawPlot();
+
+        const beh = getCorrectBehavior();
+        const behNames = {
+            "bl-tr": "Bottom-left \u2192 Top-right",
+            "tl-br": "Top-left \u2192 Bottom-right",
+            "tl-tr": "Top-left \u2192 Top-right",
+            "bl-br": "Bottom-left \u2192 Bottom-right"
+        };
+
+        let text = "End behavior: " + behNames[beh] + "\n";
+        text += "Zeros: " + poly.roots.map(f => "x = " + f.root + " (mult " + f.mult + ")").join(",  ");
+        text += "\n" + formatFactored(poly);
+
+        document.getElementById("solutionText").textContent = text;
+    }
+
+    // --- New problem ---
+
+    function newProblem() {
+        poly = generatePolynomial();
+        showSolutionDots = false;
+
+        // Compute ranges
+        const roots = poly.roots.map(f => f.root);
+        const minRoot = Math.min(...roots);
+        const maxRoot = Math.max(...roots);
+        xMin = Math.min(-5, minRoot - 2);
+        xMax = Math.max(5, maxRoot + 2);
+
+        const yr = computeYRange();
+        yMin = yr.minY;
+        yMax = yr.maxY;
+
+        // Reset UI
+        document.querySelectorAll('input[name="behavior"]').forEach(r => r.checked = false);
+        document.querySelectorAll('.behavior-option').forEach(el => el.classList.remove('selected'));
+        clearZeroEntries();
+        document.getElementById("feedback").textContent = "";
+        document.getElementById("feedback").innerHTML = "";
+        document.getElementById("solutionText").textContent = "";
+
+        document.getElementById("graphSection").style.display = "none";
+        document.getElementById("btnShowGraph").textContent = "Show Graph";
+
+        updateFormula();
+    }
+
+    // --- Event wiring ---
+
+    document.getElementById("btnCheck").addEventListener("click", checkAnswer);
+    document.getElementById("btnNew").addEventListener("click", newProblem);
+    document.getElementById("btnSolution").addEventListener("click", showSolution);
+    document.getElementById("btnAddZero").addEventListener("click", addZeroEntry);
+    document.getElementById("factoredMode").addEventListener("change", updateFormula);
+
+    document.getElementById("btnShowGraph").addEventListener("click", function() {
+        const section = document.getElementById("graphSection");
+        const btn = document.getElementById("btnShowGraph");
+        if (section.style.display === "none") {
+            section.style.display = "block";
+            btn.textContent = "Hide Graph";
+            drawPlot();
+        } else {
+            section.style.display = "none";
+            btn.textContent = "Show Graph";
+        }
+    });
+
+    // Behavior option selection styling
+    document.querySelectorAll('.behavior-option').forEach(function(opt) {
+        opt.addEventListener("click", function() {
+            document.querySelectorAll('.behavior-option').forEach(el => el.classList.remove('selected'));
+            opt.classList.add('selected');
+        });
+    });
+
+    window.addEventListener("resize", drawPlot);
+
+    // --- Init ---
+    newProblem();
+})();
+</script>
+
+</body>
+</html>
