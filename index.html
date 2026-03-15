@@ -329,7 +329,7 @@
     const canvas = document.getElementById("plotCanvas");
     const ctx = canvas.getContext("2d");
 
-    let poly = null; // { a, factors: [{root, mult}], degree, coeffs }
+    let poly = null; // { a, k, m, c, n, degree, coeffs, roots: [{root, mult}] }
     let score = 0, total = 0;
     let showSolutionDots = false;
 
@@ -346,58 +346,64 @@
         return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    function partitionDegree(deg) {
-        const partitions = [];
-        function helper(remaining, maxPart, current) {
-            if (remaining === 0) { partitions.push([...current]); return; }
-            for (let p = Math.min(remaining, maxPart, 3); p >= 1; p--) {
-                current.push(p);
-                helper(remaining - p, p, current);
-                current.pop();
-            }
-        }
-        helper(deg, 3, []);
-        return partitions;
-    }
-
     function generatePolynomial() {
         const degree = randInt(2, 6);
-        const partitions = partitionDegree(degree);
-        const mults = pickRandom(partitions);
 
-        const numRoots = mults.length;
-        const available = [];
-        for (let i = -4; i <= 4; i++) available.push(i);
-
-        // Shuffle and pick distinct roots
-        for (let i = available.length - 1; i > 0; i--) {
-            const j = randInt(0, i + 1);
-            [available[i], available[j]] = [available[j], available[i]];
+        // Structure: a * x^k * (bx² + cx + d)^m, where k + qDeg*m = degree
+        const combos = [];
+        combos.push({ k: degree, qDeg: 0, m: 0 });
+        for (let m = 1; m <= 3; m++) {
+            const k = degree - m;
+            if (k >= 0) combos.push({ k, qDeg: 1, m });
+        }
+        for (let m = 1; m <= 3; m++) {
+            const k = degree - 2 * m;
+            if (k >= 0) combos.push({ k, qDeg: 2, m });
         }
 
-        const factors = [];
-        for (let i = 0; i < numRoots; i++) {
-            factors.push({ root: available[i], mult: mults[i] });
-        }
-        factors.sort((a, b) => a.root - b.root);
+        const combo = pickRandom(combos);
+        const pool = [-4, -3, -2, -1, 1, 2, 3, 4];
 
-        const aChoices = [-3, -2, -1, 1, 2, 3];
-        const a = pickRandom(aChoices);
+        let qCoeffs = null;
+        const rootMap = {};
 
-        const coeffs = expandPolynomial(a, factors);
+        if (combo.k > 0) rootMap[0] = combo.k;
 
-        return { a, factors, degree, coeffs };
-    }
-
-    function expandPolynomial(a, factors) {
-        let result = [a];
-        for (const { root, mult } of factors) {
-            const factor = [-root, 1]; // (x - root)
-            for (let m = 0; m < mult; m++) {
-                result = multiplyPoly(result, factor);
+        if (combo.qDeg === 1) {
+            const r = pickRandom(pool);
+            qCoeffs = [-r, 1];
+            rootMap[r] = (rootMap[r] || 0) + combo.m;
+        } else if (combo.qDeg === 2) {
+            const r1 = pickRandom(pool);
+            const r2 = pickRandom(pool);
+            qCoeffs = [r1 * r2, -(r1 + r2), 1];
+            if (r1 === r2) {
+                rootMap[r1] = (rootMap[r1] || 0) + 2 * combo.m;
+            } else {
+                rootMap[r1] = (rootMap[r1] || 0) + combo.m;
+                rootMap[r2] = (rootMap[r2] || 0) + combo.m;
             }
         }
-        return result;
+
+        const roots = Object.keys(rootMap)
+            .map(r => ({ root: parseFloat(r), mult: rootMap[r] }))
+            .sort((a, b) => a.root - b.root);
+
+        const a = pickRandom([-3, -2, -1, 1, 2, 3]);
+
+        let coeffs = [a];
+        if (combo.k > 0) {
+            const xk = new Array(combo.k + 1).fill(0);
+            xk[combo.k] = 1;
+            coeffs = multiplyPoly(coeffs, xk);
+        }
+        if (qCoeffs && combo.m > 0) {
+            for (let i = 0; i < combo.m; i++) {
+                coeffs = multiplyPoly(coeffs, qCoeffs);
+            }
+        }
+
+        return { a, k: combo.k, qDeg: combo.qDeg, qCoeffs, m: combo.m, degree, coeffs, roots };
     }
 
     function multiplyPoly(a, b) {
@@ -446,21 +452,38 @@
         return "f(x) = " + (parts.length > 0 ? parts.join("") : "0");
     }
 
-    function formatFactored(a, factors) {
-        let str = "f(x) = ";
-        if (a === -1) str += "\u2212";
-        else if (a !== 1) str += a.toString();
-
-        for (const { root, mult } of factors) {
-            if (root === 0) {
-                str += "x";
-            } else if (root > 0) {
-                str += "(x \u2212 " + root + ")";
-            } else {
-                str += "(x + " + Math.abs(root) + ")";
-            }
-            if (mult > 1) str += superscript(mult);
+    function formatInner(qCoeffs) {
+        const deg = qCoeffs.length - 1;
+        let parts = [];
+        for (let i = deg; i >= 0; i--) {
+            const c = qCoeffs[i];
+            if (Math.abs(c) < 1e-10) continue;
+            const absC = Math.abs(c);
+            let term = "";
+            if (i === 0) term = Math.round(absC).toString();
+            else if (i === 1) term = (absC === 1 ? "" : Math.round(absC).toString()) + "x";
+            else term = (absC === 1 ? "" : Math.round(absC).toString()) + "x" + superscript(i);
+            if (parts.length === 0) parts.push(c < 0 ? "\u2212" + term : term);
+            else parts.push(c < 0 ? " \u2212 " + term : " + " + term);
         }
+        return parts.join("");
+    }
+
+    function formatFactored(p) {
+        let str = "f(x) = ";
+        if (p.a === -1) str += "\u2212";
+        else if (p.a !== 1) str += p.a.toString();
+
+        if (p.k > 0) {
+            str += "x";
+            if (p.k > 1) str += superscript(p.k);
+        }
+
+        if (p.qCoeffs && p.m > 0) {
+            str += "(" + formatInner(p.qCoeffs) + ")";
+            if (p.m > 1) str += superscript(p.m);
+        }
+
         return str;
     }
 
@@ -475,7 +498,7 @@
         const box = document.getElementById("formulaBox");
         box.style.color = "var(--gray-900)";
         const factored = document.getElementById("factoredMode").checked;
-        box.textContent = factored ? formatFactored(poly.a, poly.factors) : formatStandard(poly.coeffs);
+        box.textContent = factored ? formatFactored(poly) : formatStandard(poly.coeffs);
     }
 
     // --- Plot ---
@@ -511,7 +534,7 @@
         }
 
         // Also sample at roots and midpoints for accuracy
-        for (const { root } of poly.factors) {
+        for (const { root } of poly.roots) {
             const y = evalPoly(poly.coeffs, root);
             if (y < minY) minY = y;
             if (y > maxY) maxY = y;
@@ -644,7 +667,7 @@
 
         // Solution dots at zeros
         if (showSolutionDots) {
-            for (const { root, mult } of poly.factors) {
+            for (const { root, mult } of poly.roots) {
                 const p = d2c(root, 0);
                 ctx.fillStyle = "#EF4444";
                 ctx.beginPath();
@@ -669,7 +692,7 @@
         div.innerHTML = '<span>x =</span> ' +
             '<input type="text" class="zero-input" autocomplete="off"> ' +
             '<span>mult:</span> ' +
-            '<select class="mult-select"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select> ' +
+            '<select class="mult-select"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select> ' +
             '<button class="btn-sm btn-remove">&times;</button>';
         div.querySelector(".btn-remove").addEventListener("click", function() {
             div.remove();
@@ -743,7 +766,7 @@
         if (userZeros === null) {
             errors.push("Invalid zero value. Use integers, decimals, or fractions like 3/2.");
         } else {
-            const actual = poly.factors.map(f => ({ root: f.root, mult: f.mult }));
+            const actual = poly.roots.map(f => ({ root: f.root, mult: f.mult }));
             const matched = new Array(actual.length).fill(false);
             const extraZeros = [];
             let allFound = true;
@@ -808,8 +831,8 @@
         };
 
         let text = "End behavior: " + behNames[beh] + "\n";
-        text += "Zeros: " + poly.factors.map(f => "x = " + f.root + " (mult " + f.mult + ")").join(",  ");
-        text += "\n" + formatFactored(poly.a, poly.factors);
+        text += "Zeros: " + poly.roots.map(f => "x = " + f.root + " (mult " + f.mult + ")").join(",  ");
+        text += "\n" + formatFactored(poly);
 
         document.getElementById("solutionText").textContent = text;
     }
@@ -821,7 +844,7 @@
         showSolutionDots = false;
 
         // Compute ranges
-        const roots = poly.factors.map(f => f.root);
+        const roots = poly.roots.map(f => f.root);
         const minRoot = Math.min(...roots);
         const maxRoot = Math.max(...roots);
         xMin = Math.min(-5, minRoot - 2);
