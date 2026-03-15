@@ -831,15 +831,6 @@
             "bl-br": "Bottom-left \u2192 Bottom-right"
         };
 
-        document.querySelectorAll('.behavior-option').forEach(function(el) {
-            el.classList.remove('selected');
-            var radio = el.querySelector('input[type="radio"]');
-            if (el.getAttribute('data-value') === beh) {
-                el.classList.add('selected');
-                radio.checked = true;
-            }
-        });
-
         let text = "End behavior: " + behNames[beh] + "\n";
         text += "Zeros: " + poly.roots.map(f => "x = " + f.root + " (mult " + f.mult + ")").join(",  ");
         text += "\n" + formatFactored(poly);
