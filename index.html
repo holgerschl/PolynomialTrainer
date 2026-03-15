@@ -271,7 +271,9 @@
         <div id="graphSection" style="display: none;">
             <canvas id="plotCanvas" width="1060" height="480"></canvas>
         </div>
-        <button class="btn btn-blue" id="btnShowGraph" style="margin-top: 0.5rem;">Show Graph</button>
+        <div style="margin-top: 0.75rem; text-align: center;">
+            <button class="btn btn-blue" id="btnShowGraph" style="padding: 0.6rem 2rem; font-size: 1rem;">Show Graph</button>
+        </div>
     </div>
 
     <!-- Exercises -->
@@ -410,16 +412,6 @@
 
     function evalPoly(coeffs, x) {
         let val = 0;
-        for (let i = coeffs.length - 1; i >= 0; i--) {
-            val = val * x + coeffs[i];
-        }
-        // coeffs[0] is constant, coeffs[n] is x^n — wait, let me check
-        // expandPolynomial builds [a] then multiplies by [-root, 1]
-        // multiplyPoly: result[i+j] += a[i]*b[j]
-        // [-root, 1] means constant=-root, x^1=1
-        // So coeffs[0] = constant, coeffs[1] = x^1 coeff, etc.
-        // Horner: start from highest degree
-        val = 0;
         for (let i = coeffs.length - 1; i >= 0; i--) {
             val = val * x + coeffs[i];
         }
