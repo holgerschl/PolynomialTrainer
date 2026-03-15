@@ -258,7 +258,7 @@
 
 <div class="header">
     <h1>Polynomial Trainer</h1>
-    <p>Determine end behavior and zeros of polynomial functions from their graph</p>
+    <p>Determine end behavior and zeros of polynomial functions from the formula</p>
 </div>
 
 <div class="main">
@@ -269,7 +269,10 @@
             <label><input type="checkbox" id="showFormula" checked> Show formula</label>
         </div>
         <div class="formula-box" id="formulaBox"></div>
-        <canvas id="plotCanvas" width="1060" height="480"></canvas>
+        <div id="graphSection" style="display: none;">
+            <canvas id="plotCanvas" width="1060" height="480"></canvas>
+        </div>
+        <button class="btn btn-blue" id="btnShowGraph" style="margin-top: 0.5rem;">Show Graph</button>
     </div>
 
     <!-- Exercises -->
@@ -807,6 +810,8 @@
 
     function showSolution() {
         showSolutionDots = true;
+        document.getElementById("graphSection").style.display = "block";
+        document.getElementById("btnShowGraph").textContent = "Hide Graph";
         drawPlot();
 
         const beh = getCorrectBehavior();
@@ -849,8 +854,10 @@
         document.getElementById("feedback").innerHTML = "";
         document.getElementById("solutionText").textContent = "";
 
+        document.getElementById("graphSection").style.display = "none";
+        document.getElementById("btnShowGraph").textContent = "Show Graph";
+
         updateFormula();
-        drawPlot();
     }
 
     // --- Event wiring ---
@@ -861,6 +868,19 @@
     document.getElementById("btnAddZero").addEventListener("click", addZeroEntry);
     document.getElementById("factoredMode").addEventListener("change", updateFormula);
     document.getElementById("showFormula").addEventListener("change", updateFormula);
+
+    document.getElementById("btnShowGraph").addEventListener("click", function() {
+        const section = document.getElementById("graphSection");
+        const btn = document.getElementById("btnShowGraph");
+        if (section.style.display === "none") {
+            section.style.display = "block";
+            btn.textContent = "Hide Graph";
+            drawPlot();
+        } else {
+            section.style.display = "none";
+            btn.textContent = "Show Graph";
+        }
+    });
 
     // Behavior option selection styling
     document.querySelectorAll('.behavior-option').forEach(function(opt) {
