@@ -821,7 +821,7 @@
         showSolutionDots = true;
         document.getElementById("graphSection").style.display = "block";
         document.getElementById("btnShowGraph").textContent = "Hide Graph";
-        drawPlot();
+        requestAnimationFrame(drawPlot);
 
         const beh = getCorrectBehavior();
         const behNames = {
@@ -885,7 +885,7 @@
         if (section.style.display === "none") {
             section.style.display = "block";
             btn.textContent = "Hide Graph";
-            drawPlot();
+            requestAnimationFrame(drawPlot);
         } else {
             section.style.display = "none";
             btn.textContent = "Show Graph";
