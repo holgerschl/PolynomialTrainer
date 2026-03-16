@@ -272,7 +272,9 @@
     <div class="card">
         <div class="mode-row">
             <label><input type="checkbox" id="factoredMode"><span data-i18n="factoredLabel"> In faktorisierter Form anzeigen (einfacher)</span></label>
+            <label><input type="checkbox" id="showQuadFormula"><span data-i18n="showQuadFormula"> Lösungsformel anzeigen</span></label>
         </div>
+        <div id="quadFormulaBox" class="formula-box" style="display: none; font-size: 1rem; color: var(--orange); text-align: center;"></div>
         <div class="formula-box" id="formulaBox"></div>
         <div id="graphSection" style="display: none;">
             <canvas id="plotCanvas" width="1060" height="480"></canvas>
@@ -338,6 +340,9 @@
         subtitle: { de: "Bestimme Endverhalten und Nullstellen von Polynomfunktionen anhand der Formel", en: "Determine end behavior and zeros of polynomial functions from the formula" },
         backLink: { de: "\u2190 Zur\u00FCck zur Projektwebsite", en: "\u2190 Back to project website" },
         factoredLabel: { de: " In faktorisierter Form anzeigen (einfacher)", en: " Show in factored form (easier)" },
+        showQuadFormula: { de: " L\u00F6sungsformel anzeigen", en: " Show quadratic formula" },
+        quadFormula: { de: "Mitternachtsformel: x = (\u2212c \u00B1 \u221A(c\u00B2 \u2212 4bd)) / (2b)", en: "Quadratic formula: x = (\u2212c \u00B1 \u221A(c\u00B2 \u2212 4bd)) / (2b)" },
+        quadFormulaSimple: { de: "L\u00F6sungsformel: x = (\u2212c \u00B1 \u221A(c\u00B2 \u2212 4d)) / 2  (da b = 1)", en: "Quadratic formula: x = (\u2212c \u00B1 \u221A(c\u00B2 \u2212 4d)) / 2  (since b = 1)" },
         showGraph: { de: "Graph anzeigen", en: "Show Graph" },
         hideGraph: { de: "Graph ausblenden", en: "Hide Graph" },
         endBehaviorTitle: { de: "1. Endverhalten", en: "1. End Behavior" },
@@ -913,6 +918,7 @@
         const checkbox = document.getElementById("factoredMode");
         checkbox.checked = poly.m > 1;
         updateFormula();
+        if (typeof updateQuadFormula === "function") updateQuadFormula();
     }
 
     // --- Event wiring ---
@@ -922,6 +928,19 @@
     document.getElementById("btnSolution").addEventListener("click", showSolution);
     document.getElementById("btnAddZero").addEventListener("click", addZeroEntry);
     document.getElementById("factoredMode").addEventListener("change", updateFormula);
+
+    function updateQuadFormula() {
+        var box = document.getElementById("quadFormulaBox");
+        var checked = document.getElementById("showQuadFormula").checked;
+        if (checked && poly && poly.qDeg === 2 && poly.m > 0) {
+            box.style.display = "block";
+            box.textContent = t("quadFormulaSimple");
+        } else {
+            box.style.display = "none";
+        }
+    }
+
+    document.getElementById("showQuadFormula").addEventListener("change", updateQuadFormula);
 
     document.getElementById("btnShowGraph").addEventListener("click", function() {
         const section = document.getElementById("graphSection");
@@ -958,6 +977,7 @@
         var graphSection = document.getElementById("graphSection");
         document.getElementById("btnShowGraph").textContent = graphSection.style.display === "none" ? t("showGraph") : t("hideGraph");
         document.querySelectorAll(".mult-label").forEach(function(el) { el.textContent = t("mult"); });
+        updateQuadFormula();
     }
 
     document.getElementById("langDe").addEventListener("click", function() { lang = "de"; applyLanguage(); });
