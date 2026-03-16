@@ -788,6 +788,7 @@
     }
 
     function checkAnswer() {
+        if (document.getElementById("btnCheck").disabled) return;
         const fb = document.getElementById("feedback");
         const errors = [];
 
@@ -847,6 +848,9 @@
             score++;
             fb.textContent = t("correct");
             fb.style.color = "#10B981";
+            document.getElementById("btnCheck").disabled = true;
+            document.getElementById("btnCheck").style.opacity = "0.4";
+            document.getElementById("btnCheck").style.cursor = "default";
         } else {
             fb.innerHTML = errors.join("<br>");
             fb.style.color = "#EF4444";
@@ -898,6 +902,9 @@
         clearZeroEntries();
         document.getElementById("feedback").textContent = "";
         document.getElementById("feedback").innerHTML = "";
+        document.getElementById("btnCheck").disabled = false;
+        document.getElementById("btnCheck").style.opacity = "";
+        document.getElementById("btnCheck").style.cursor = "";
         document.getElementById("solutionText").textContent = "";
 
         document.getElementById("graphSection").style.display = "none";
