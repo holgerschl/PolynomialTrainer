@@ -1,19 +1,21 @@
-# Polynomial Trainer
+# Polynomial Trainer — Ganzrationale Funktionen
 
-A browser-based learning tool that helps students analyse polynomial functions — determine end behaviour and find zeros with multiplicities.
+A browser-based learning tool for **10th-grade school (German: Gymnasium) students** that helps analyse polynomial functions — determine end behaviour and find zeros with multiplicities.
 
 **[Try it in your browser](https://holgerschl.github.io/PolynomialTrainer/app.html)** | **[Project website](https://holgerschl.github.io/PolynomialTrainer/)**
 
 ## Features
 
+- **Bilingual (DE / EN)** — German is the default language; switch to English with one click
 - **Random polynomial generation** (degree 2–5) with integer roots and small integer coefficients
-- **Two display modes**: standard (expanded) form or factored form (easier)
+- **Two display modes**: standard (expanded) form or factored form (easier); factored form is auto-selected when the inner factor has multiplicity > 1
 - **End behaviour exercise**: determine whether the graph rises or falls at each end
 - **Zeros and multiplicities**: enter each zero and its multiplicity
+- **Quadratic formula on demand** — optional display of the Mitternachtsformel as a hint
 - **Graph on demand**: the plot is hidden by default — work from the formula first, then reveal to verify
 - **Detailed feedback**: tells you exactly which zeros are wrong, missing, or have incorrect multiplicities
 - **Solution reveal** with red dots on the graph at each zero
-- **Score tracking** across the session
+- **Score tracking** across the session (Check Answer is disabled after a correct answer to prevent score inflation)
 
 ## Polynomial Structure
 
