@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polynomial Trainer</title>
+    <title>Rationale Funktionen | Polynomial Trainer</title>
     <style>
         :root {
             --blue: #3B82F6;
@@ -289,19 +289,186 @@
 </head>
 <body>
 
-<div class="hero">
-    <h1>Polynomial Trainer</h1>
-    <p>A browser-based learning tool for 10th-grade school (German: Gymnasium) students to analyse polynomial functions &mdash; determine end behaviour and find zeros with multiplicities.</p>
+<div class="hero" style="position: relative;">
+    <div style="position: absolute; right: 1.5rem; top: 1.5rem; font-size: 1rem;">
+        <span id="langDe" style="cursor:pointer; font-weight:bold; color:white;">DE</span>
+        <span style="color:rgba(255,255,255,0.4);"> | </span>
+        <span id="langEn" style="cursor:pointer; color:rgba(255,255,255,0.5);">EN</span>
+    </div>
+    <h1 id="heroTitle">Rationale Funktionen</h1>
+    <p id="heroDesc">Ein browserbasiertes Lerntool f&uuml;r Sch&uuml;lerinnen und Sch&uuml;ler der 10. Klasse (Gymnasium), um Polynomfunktionen zu analysieren &mdash; Endverhalten bestimmen und Nullstellen mit Vielfachheiten finden.</p>
     <div class="formula">
         f(x) = <span class="hl-a">a</span> &middot; x<sup><span class="hl-k">k</span></sup> &middot; (<span class="hl-q">bx&sup2; + cx + d</span>)<sup><span class="hl-m">m</span></sup>
     </div>
     <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a class="download-btn" href="app.html" style="background: #10B981; font-size: 1.1rem; padding: 0.85rem 2.5rem;">&#9654; Try it in your Browser</a>
-        <a class="download-btn" href="https://holgerschl.github.io/SineParameterTrainer/" target="_blank" rel="noopener" style="background: #3B82F6; font-size: 1.1rem; padding: 0.85rem 2.5rem;">&#9654; Sine Parameter Trainer</a>
+        <a class="download-btn" href="app.html" id="tryBtn" style="background: #10B981; font-size: 1.1rem; padding: 0.85rem 2.5rem;">&#9654; Im Browser ausprobieren</a>
+        <a class="download-btn" href="https://holgerschl.github.io/SineParameterTrainer/" target="_blank" rel="noopener" id="sineBtn" style="background: #3B82F6; font-size: 1.1rem; padding: 0.85rem 2.5rem;">&#9654; Sinusfunktion-Trainer</a>
     </div>
 </div>
 
 <div class="container">
+
+    <!-- ======================== GERMAN CONTENT ======================== -->
+    <div id="content-de">
+
+    <!-- FEATURES -->
+    <section style="margin-top: 3rem;">
+        <h2>Funktionen</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <strong>Zuf&auml;llige Polynomerzeugung</strong>
+                <p>Jeder Klick auf <em>Neue Aufgabe</em> erzeugt ein neues Polynom (Grad 2&ndash;5) mit zuf&auml;lligen Parametern und ganzzahligen Nullstellen.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Zwei Darstellungsformen</strong>
+                <p>Umschalten zwischen <strong>Normalform</strong> (ausmultipliziert) und <strong>faktorisierter Form</strong> f&uuml;r verschiedene Schwierigkeitsstufen.</p>
+            </div>
+            <div class="feature-card">
+                <strong>&Uuml;bung zum Endverhalten</strong>
+                <p>W&auml;hle aus, wie sich der Graph links und rechts verh&auml;lt &mdash; vier Optionen decken alle Kombinationen ab.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Nullstellen &amp; Vielfachheiten</strong>
+                <p>Gib jede Nullstelle und ihre Vielfachheit ein. Das Tool pr&uuml;ft deine Antworten und sagt dir genau, was falsch ist.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Graph auf Abruf</strong>
+                <p>Der Graph ist standardm&auml;&szlig;ig ausgeblendet &mdash; arbeite zuerst mit der Formel, dann zeige den Graphen zur &Uuml;berpr&uuml;fung.</p>
+            </div>
+            <div class="feature-card">
+                <strong>L&ouml;sung anzeigen</strong>
+                <p>Klicke auf <em>L&ouml;sung anzeigen</em>, um alle Nullstellen mit roten Punkten im Graphen zu sehen, plus das korrekte Endverhalten.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Br&uuml;che &amp; Dezimaleingabe</strong>
+                <p>Antworten k&ouml;nnen als ganze Zahlen (<code>3</code>), Dezimalzahlen (<code>1.5</code>) oder Br&uuml;che (<code>3/2</code>) eingegeben werden.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Punkteverfolgung</strong>
+                <p>Z&auml;hlt richtige Antworten gegen Gesamtversuche w&auml;hrend der Sitzung.</p>
+            </div>
+            <div class="feature-card">
+                <strong>Keine Installation</strong>
+                <p>Reines HTML/CSS/JavaScript &mdash; l&auml;uft in jedem modernen Browser. Kein Download, kein Setup, keine Abh&auml;ngigkeiten.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- POLYNOMIAL STRUCTURE -->
+    <section>
+        <h2>Polynomstruktur</h2>
+        <p>Jedes erzeugte Polynom hat die Form:</p>
+        <div style="text-align: center; font-family: 'Cambria Math', Georgia, serif; font-size: 1.3rem; margin: 1rem 0; padding: 0.75rem; background: white; border-radius: 8px; border: 1px solid var(--gray-200);">
+            f(x) = <span style="color:var(--red); font-weight: 700;">a</span> &middot; x<sup><span style="color:var(--orange); font-weight: 700;">k</span></sup> &middot; (<span style="color:var(--green); font-weight: 700;">bx&sup2; + cx + d</span>)<sup><span style="color:var(--purple); font-weight: 700;">m</span></sup>
+        </div>
+        <table>
+            <thead>
+                <tr><th>Komponente</th><th>Beschreibung</th><th>Bereich</th></tr>
+            </thead>
+            <tbody>
+                <tr><td style="color:var(--red); font-weight: 700;">a</td><td>F&uuml;hrungskoeffizient</td><td>&minus;3, &minus;2, &minus;1, 1, 2, 3</td></tr>
+                <tr><td style="color:var(--orange); font-weight: 700;">k</td><td>Potenz von x (Nullstelle bei 0 mit Vielfachheit k)</td><td>0 bis Grad</td></tr>
+                <tr><td style="color:var(--green); font-weight: 700;">bx&sup2; + cx + d</td><td>Innerer Faktor (quadratisch oder linear, normiert, ganzzahlige Nullstellen)</td><td>Nullstellen in [&minus;4, 4]</td></tr>
+                <tr><td style="color:var(--purple); font-weight: 700;">m</td><td>Potenz des inneren Faktors</td><td>0, 1, 2 oder 3</td></tr>
+                <tr><td style="font-weight: 700;">Grad</td><td>Gesamtgrad: k + Grad(innerer) &middot; m</td><td>2 bis 5</td></tr>
+            </tbody>
+        </table>
+        <div class="note">
+            <strong>Designziel:</strong> Der innere Faktor hat immer &bdquo;sch&ouml;ne&ldquo; ganzzahlige Nullstellen, sodass Sch&uuml;ler durch Faktorisieren oder die Mitternachtsformel ohne Taschenrechner l&ouml;sen k&ouml;nnen.
+        </div>
+    </section>
+
+    <!-- HOW TO USE -->
+    <section>
+        <h2>Anleitung</h2>
+
+        <h3>1. Formel lesen</h3>
+        <p>Beim Start der App (oder nach Klick auf <strong>Neue Aufgabe</strong>) wird eine Polynomformel angezeigt. Mit der Checkbox zwischen Normalform (ausmultipliziert) und faktorisierter Form umschalten.</p>
+
+        <h3>2. Endverhalten bestimmen</h3>
+        <p>Betrachte den <strong>Grad</strong> und das <strong>Vorzeichen des F&uuml;hrungskoeffizienten</strong>:</p>
+        <ul class="tip-list">
+            <li><strong>Ungerader Grad, positiver Koeffizient</strong> &rarr; unten-links nach oben-rechts &#8599;</li>
+            <li><strong>Ungerader Grad, negativer Koeffizient</strong> &rarr; oben-links nach unten-rechts &#8600;</li>
+            <li><strong>Gerader Grad, positiver Koeffizient</strong> &rarr; oben-links nach oben-rechts &#8613;</li>
+            <li><strong>Gerader Grad, negativer Koeffizient</strong> &rarr; unten-links nach unten-rechts &#8615;</li>
+        </ul>
+
+        <h3>3. Nullstellen finden</h3>
+        <p>Setze jeden Faktor gleich null und l&ouml;se:</p>
+        <ul class="tip-list">
+            <li><strong>x<sup>k</sup> = 0</strong> &rarr; Nullstelle bei x = 0 mit Vielfachheit k</li>
+            <li><strong>bx&sup2; + cx + d = 0</strong> &rarr; faktorisieren oder Mitternachtsformel anwenden; jede Nullstelle hat Vielfachheit m</li>
+            <li>Hat die innere quadratische Funktion eine doppelte Nullstelle, verdoppelt sich die Vielfachheit auf 2m</li>
+        </ul>
+        <p>F&uuml;ge Nullstellen mit dem Button <strong>+ Nullstelle hinzuf&uuml;gen</strong> hinzu und w&auml;hle die richtige Vielfachheit.</p>
+
+        <h3>4. Antwort pr&uuml;fen</h3>
+        <ul class="tip-list">
+            <li>Dr&uuml;cke <strong>Enter</strong> oder klicke auf <strong>Antwort pr&uuml;fen</strong>.</li>
+            <li><strong style="color:var(--green)">Richtig</strong> &mdash; gr&uuml;ne Best&auml;tigung, Punktzahl erh&ouml;ht sich.</li>
+            <li><strong style="color:var(--red)">Falsch</strong> &mdash; das Tool zeigt dir, welche Nullstellen falsch oder fehlend sind.</li>
+        </ul>
+
+        <h3>5. Graph anzeigen</h3>
+        <p>Klicke auf <strong>Graph anzeigen</strong>, um das Polynom zu visualisieren und deine Analyse zu &uuml;berpr&uuml;fen. Klicke auf <strong>L&ouml;sung anzeigen</strong>, um die Nullstellen mit roten Punkten im Graphen zu sehen.</p>
+    </section>
+
+    <!-- TECH STACK -->
+    <section>
+        <h2>Technologie</h2>
+        <div class="tech-badges">
+            <span class="badge">Vanilla JavaScript</span>
+            <span class="badge">HTML5 Canvas</span>
+            <span class="badge">CSS3</span>
+            <span class="badge">Keine Abh&auml;ngigkeiten</span>
+            <span class="badge">GitHub Pages</span>
+        </div>
+        <p style="margin-top: 1rem;">Die gesamte Anwendung ist eine einzige HTML-Datei &mdash; kein Build-Schritt, kein Framework, kein Server erforderlich.</p>
+    </section>
+
+    <!-- PROJECT STRUCTURE -->
+    <section>
+        <h2>Projektstruktur</h2>
+        <pre><code>PolynomialTrainer/
+&#9500;&#9472;&#9472; app.html         Die Webanwendung (einzelne Datei)
+&#9500;&#9472;&#9472; index.html       Diese Projektwebseite
+&#9500;&#9472;&#9472; README.md        Dokumentation
+&#9500;&#9472;&#9472; LICENSE          MIT-Lizenz
+&#9492;&#9472;&#9472; .gitignore</code></pre>
+    </section>
+
+    <!-- LICENSE -->
+    <section>
+        <h2>Lizenz</h2>
+        <p><a href="https://github.com/holgerschl/PolynomialTrainer/blob/main/LICENSE" target="_blank" rel="noopener">MIT-Lizenz</a> &mdash; frei nutzbar, ver&auml;nderbar und verteilbar.</p>
+        <p><strong>Datenschutz:</strong> Diese Anwendung l&auml;uft vollst&auml;ndig in deinem Browser. Es werden keine Daten erhoben, &uuml;bertragen oder auf einem Server gespeichert.</p>
+    </section>
+
+    <!-- GITHUB SIGNUP -->
+    <section>
+        <h2>Kostenloses GitHub-Konto erstellen</h2>
+        <p>Um unten einen Kommentar zu hinterlassen, ben&ouml;tigst du ein (kostenloses) GitHub-Konto. Wenn du noch keins hast, dauert die Anmeldung nur eine Minute:</p>
+        <ol class="steps">
+            <li>Gehe zur GitHub-Registrierungsseite:<br>
+                <a class="download-btn" href="https://github.com/signup" target="_blank" rel="noopener">Bei GitHub registrieren</a>
+            </li>
+            <li>Gib deine <strong>E-Mail-Adresse</strong> ein, w&auml;hle ein <strong>Passwort</strong> und einen <strong>Benutzernamen</strong>.</li>
+            <li>Schlie&szlig;e das kurze Verifizierungsr&auml;tsel ab und best&auml;tige deine E-Mail.</li>
+        </ol>
+        <p>Das war&rsquo;s &mdash; du kannst jetzt Kommentare und Feedback hinterlassen.</p>
+    </section>
+
+    <!-- COMMENTS INTRO (DE) -->
+    <section>
+        <h2>Kommentare &amp; Feedback</h2>
+        <p>Hast du eine Frage, einen Vorschlag oder einen Fehler gefunden? Hinterlasse unten einen Kommentar &mdash; melde dich mit deinem GitHub-Konto an, um zu schreiben.</p>
+    </section>
+
+    </div><!-- /content-de -->
+
+    <!-- ======================== ENGLISH CONTENT ======================== -->
+    <div id="content-en" style="display:none;">
 
     <!-- FEATURES -->
     <section style="margin-top: 3rem;">
@@ -451,10 +618,16 @@
         <p>That&rsquo;s it &mdash; you can now sign in to leave comments and feedback.</p>
     </section>
 
-    <!-- COMMENTS -->
+    <!-- COMMENTS INTRO (EN) -->
     <section>
         <h2>Comments &amp; Feedback</h2>
         <p>Have a question, suggestion, or found a bug? Leave a comment below &mdash; sign in with your GitHub account to post.</p>
+    </section>
+
+    </div><!-- /content-en -->
+
+    <!-- GISCUS (shared, not duplicated) -->
+    <section>
         <div class="giscus-wrapper">
             <script src="https://giscus.app/client.js"
                     data-repo="holgerschl/PolynomialTrainer"
@@ -467,7 +640,7 @@
                     data-emit-metadata="0"
                     data-input-position="top"
                     data-theme="light"
-                    data-lang="en"
+                    data-lang="de"
                     data-loading="lazy"
                     crossorigin="anonymous"
                     async>
@@ -477,10 +650,72 @@
 
 </div>
 
-<footer>
+<footer id="footer-de">
+    Rationale Funktionen &mdash; MIT-Lizenz &mdash; frei nutzbar, ver&auml;nderbar und verteilbar.<br>
+    Schau dir auch den <a href="https://holgerschl.github.io/SineParameterTrainer/" target="_blank" rel="noopener" style="color: var(--purple); font-weight: 600;">Sinusfunktion-Trainer</a> zum &Uuml;ben von Sinusfunktionsparametern an.
+</footer>
+
+<footer id="footer-en" style="display:none;">
     Polynomial Trainer &mdash; MIT License &mdash; free to use, modify, and distribute.<br>
     Also check out the <a href="https://holgerschl.github.io/SineParameterTrainer/" target="_blank" rel="noopener" style="color: var(--purple); font-weight: 600;">Sine Parameter Trainer</a> for practising sine function parameters.
 </footer>
+
+<script>
+(function() {
+    var currentLang = 'de';
+
+    var heroTitle    = document.getElementById('heroTitle');
+    var heroDesc     = document.getElementById('heroDesc');
+    var tryBtn       = document.getElementById('tryBtn');
+    var sineBtn      = document.getElementById('sineBtn');
+    var contentDe    = document.getElementById('content-de');
+    var contentEn    = document.getElementById('content-en');
+    var footerDe     = document.getElementById('footer-de');
+    var footerEn     = document.getElementById('footer-en');
+    var langDeBtn    = document.getElementById('langDe');
+    var langEnBtn    = document.getElementById('langEn');
+
+    function setLang(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+
+        if (lang === 'de') {
+            heroTitle.textContent = 'Rationale Funktionen';
+            heroDesc.innerHTML    = 'Ein browserbasiertes Lerntool f\u00fcr Sch\u00fclerinnen und Sch\u00fcler der 10.\u00a0Klasse (Gymnasium), um Polynomfunktionen zu analysieren \u2014 Endverhalten bestimmen und Nullstellen mit Vielfachheiten finden.';
+            tryBtn.innerHTML      = '\u25B6 Im Browser ausprobieren';
+            sineBtn.innerHTML     = '\u25B6 Sinusfunktion-Trainer';
+
+            contentDe.style.display = '';
+            contentEn.style.display = 'none';
+            footerDe.style.display  = '';
+            footerEn.style.display  = 'none';
+
+            langDeBtn.style.fontWeight = 'bold';
+            langDeBtn.style.color      = 'white';
+            langEnBtn.style.fontWeight = 'normal';
+            langEnBtn.style.color      = 'rgba(255,255,255,0.5)';
+        } else {
+            heroTitle.textContent = 'Polynomial Trainer';
+            heroDesc.innerHTML    = 'A browser-based learning tool for 10th-grade school (German: Gymnasium) students to analyse polynomial functions \u2014 determine end behaviour and find zeros with multiplicities.';
+            tryBtn.innerHTML      = '\u25B6 Try it in your Browser';
+            sineBtn.innerHTML     = '\u25B6 Sine Parameter Trainer';
+
+            contentDe.style.display = 'none';
+            contentEn.style.display = '';
+            footerDe.style.display  = 'none';
+            footerEn.style.display  = '';
+
+            langEnBtn.style.fontWeight = 'bold';
+            langEnBtn.style.color      = 'white';
+            langDeBtn.style.fontWeight = 'normal';
+            langDeBtn.style.color      = 'rgba(255,255,255,0.5)';
+        }
+    }
+
+    langDeBtn.addEventListener('click', function() { setLang('de'); });
+    langEnBtn.addEventListener('click', function() { setLang('en'); });
+})();
+</script>
 
 </body>
 </html>

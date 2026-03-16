@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polynomial Trainer</title>
+    <title>Rationale Funktionen | Polynomial Trainer</title>
     <style>
         :root {
             --blue: #3B82F6;
@@ -256,76 +256,113 @@
 </head>
 <body>
 
-<div class="header">
-    <h1>Polynomial Trainer</h1>
-    <p>Determine end behavior and zeros of polynomial functions from the formula</p>
-    <a href="index.html" style="color: rgba(255,255,255,0.85); font-size: 0.85rem; text-decoration: none; display: inline-block; margin-top: 0.3rem;">&larr; Back to project website</a>
+<div class="header" style="position: relative;">
+    <div style="position: absolute; right: 1rem; top: 0.8rem; font-size: 0.9rem;">
+        <span id="langDe" style="cursor:pointer; font-weight:bold; color:white;">DE</span>
+        <span style="color:rgba(255,255,255,0.4);"> | </span>
+        <span id="langEn" style="cursor:pointer; color:rgba(255,255,255,0.5);">EN</span>
+    </div>
+    <h1 data-i18n="title">Rationale Funktionen</h1>
+    <p data-i18n="subtitle">Bestimme Endverhalten und Nullstellen von Polynomfunktionen anhand der Formel</p>
+    <a href="index.html" data-i18n="backLink" style="color: rgba(255,255,255,0.85); font-size: 0.85rem; text-decoration: none; display: inline-block; margin-top: 0.3rem;">&#8592; Zur&uuml;ck zur Projektwebsite</a>
 </div>
 
 <div class="main">
     <!-- Mode & Plot -->
     <div class="card">
         <div class="mode-row">
-            <label><input type="checkbox" id="factoredMode"> Show in factored form (easier)</label>
+            <label><input type="checkbox" id="factoredMode"><span data-i18n="factoredLabel"> In faktorisierter Form anzeigen (einfacher)</span></label>
         </div>
         <div class="formula-box" id="formulaBox"></div>
         <div id="graphSection" style="display: none;">
             <canvas id="plotCanvas" width="1060" height="480"></canvas>
         </div>
         <div style="margin-top: 0.75rem; text-align: center;">
-            <button class="btn btn-blue" id="btnShowGraph" style="padding: 0.6rem 2rem; font-size: 1rem;">Show Graph</button>
+            <button class="btn btn-blue" id="btnShowGraph" data-i18n="showGraph" style="padding: 0.6rem 2rem; font-size: 1rem;">Graph anzeigen</button>
         </div>
     </div>
 
     <!-- Exercises -->
     <div class="card">
-        <div class="section-title">1. End Behavior</div>
+        <div class="section-title" data-i18n="endBehaviorTitle">1. Endverhalten</div>
         <div class="behavior-grid" id="behaviorGrid">
             <label class="behavior-option" data-value="bl-tr">
                 <input type="radio" name="behavior" value="bl-tr">
                 <span class="arrow-icon">&#8599;</span>
-                <span class="behavior-label">Bottom-left &rarr; Top-right</span>
+                <span class="behavior-label" data-i18n="bltr">Unten links &#8594; Oben rechts</span>
             </label>
             <label class="behavior-option" data-value="tl-br">
                 <input type="radio" name="behavior" value="tl-br">
                 <span class="arrow-icon">&#8600;</span>
-                <span class="behavior-label">Top-left &rarr; Bottom-right</span>
+                <span class="behavior-label" data-i18n="tlbr">Oben links &#8594; Unten rechts</span>
             </label>
             <label class="behavior-option" data-value="tl-tr">
                 <input type="radio" name="behavior" value="tl-tr">
                 <span class="arrow-icon">&#8613;</span>
-                <span class="behavior-label">Top-left &rarr; Top-right</span>
+                <span class="behavior-label" data-i18n="tltr">Oben links &#8594; Oben rechts</span>
             </label>
             <label class="behavior-option" data-value="bl-br">
                 <input type="radio" name="behavior" value="bl-br">
                 <span class="arrow-icon">&#8615;</span>
-                <span class="behavior-label">Bottom-left &rarr; Bottom-right</span>
+                <span class="behavior-label" data-i18n="blbr">Unten links &#8594; Unten rechts</span>
             </label>
         </div>
 
         <hr class="divider">
 
-        <div class="section-title">2. Zeros and Multiplicities</div>
+        <div class="section-title" data-i18n="zerosTitle">2. Nullstellen und Vielfachheiten</div>
         <div id="zerosContainer"></div>
-        <button class="btn-sm btn-add" id="btnAddZero">+ Add zero</button>
+        <button class="btn-sm btn-add" id="btnAddZero" data-i18n="addZero">+ Nullstelle hinzuf&uuml;gen</button>
 
         <hr class="divider">
 
         <div class="buttons-row">
-            <button class="btn btn-blue" id="btnCheck">Check Answer</button>
-            <button class="btn btn-green" id="btnNew">New Problem</button>
-            <button class="btn btn-orange" id="btnSolution">Show Solution</button>
+            <button class="btn btn-blue" id="btnCheck" data-i18n="checkBtn">Antwort pr&uuml;fen</button>
+            <button class="btn btn-green" id="btnNew" data-i18n="newBtn">Neue Aufgabe</button>
+            <button class="btn btn-orange" id="btnSolution" data-i18n="solutionBtn">L&ouml;sung anzeigen</button>
         </div>
 
         <div class="feedback" id="feedback"></div>
         <div class="solution" id="solutionText"></div>
-        <div class="score" id="scoreText">Score: 0 / 0</div>
+        <div class="score" id="scoreText">Punkte: 0 / 0</div>
     </div>
 </div>
 
 <script>
 (function() {
     "use strict";
+
+    let lang = "de";
+    const i18n = {
+        title: { de: "Rationale Funktionen", en: "Polynomial Trainer" },
+        subtitle: { de: "Bestimme Endverhalten und Nullstellen von Polynomfunktionen anhand der Formel", en: "Determine end behavior and zeros of polynomial functions from the formula" },
+        backLink: { de: "\u2190 Zur\u00FCck zur Projektwebsite", en: "\u2190 Back to project website" },
+        factoredLabel: { de: " In faktorisierter Form anzeigen (einfacher)", en: " Show in factored form (easier)" },
+        showGraph: { de: "Graph anzeigen", en: "Show Graph" },
+        hideGraph: { de: "Graph ausblenden", en: "Hide Graph" },
+        endBehaviorTitle: { de: "1. Endverhalten", en: "1. End Behavior" },
+        bltr: { de: "Unten links \u2192 Oben rechts", en: "Bottom-left \u2192 Top-right" },
+        tlbr: { de: "Oben links \u2192 Unten rechts", en: "Top-left \u2192 Bottom-right" },
+        tltr: { de: "Oben links \u2192 Oben rechts", en: "Top-left \u2192 Top-right" },
+        blbr: { de: "Unten links \u2192 Unten rechts", en: "Bottom-left \u2192 Bottom-right" },
+        zerosTitle: { de: "2. Nullstellen und Vielfachheiten", en: "2. Zeros and Multiplicities" },
+        mult: { de: "Vielf.:", en: "mult:" },
+        addZero: { de: "+ Nullstelle hinzuf\u00FCgen", en: "+ Add zero" },
+        checkBtn: { de: "Antwort pr\u00FCfen", en: "Check Answer" },
+        newBtn: { de: "Neue Aufgabe", en: "New Problem" },
+        solutionBtn: { de: "L\u00F6sung anzeigen", en: "Show Solution" },
+        scoreLabel: { de: "Punkte", en: "Score" },
+        correct: { de: "Richtig! Gut gemacht!", en: "Correct! Well done!" },
+        selectBehavior: { de: "Bitte w\u00E4hle ein Endverhalten aus.", en: "Please select an end behavior." },
+        wrongBehavior: { de: "Das Endverhalten ist falsch.", en: "End behavior is incorrect." },
+        invalidZero: { de: "Ung\u00FCltiger Nullstellenwert. Verwende ganze Zahlen, Dezimalzahlen oder Br\u00FCche wie 3/2.", en: "Invalid zero value. Use integers, decimals, or fractions like 3/2." },
+        wrongMult: { de: "Nullstelle x = {0} hat die falsche Vielfachheit.", en: "Zero x = {0} has the wrong multiplicity." },
+        notAZero: { de: "x = {0} ist keine Nullstelle.", en: "x = {0} is not a zero." },
+        missingZero: { de: "Fehlende Nullstelle bei x = {0}.", en: "Missing zero at x = {0}." },
+        endBehaviorSol: { de: "Endverhalten", en: "End behavior" },
+        zerosSol: { de: "Nullstellen", en: "Zeros" }
+    };
+    function t(key) { return i18n[key][lang]; }
 
     const canvas = document.getElementById("plotCanvas");
     const ctx = canvas.getContext("2d");
@@ -692,7 +729,7 @@
         div.className = "zero-entry";
         div.innerHTML = '<span>x =</span> ' +
             '<input type="text" class="zero-input" autocomplete="off"> ' +
-            '<span>mult:</span> ' +
+            '<span class="mult-label">' + t("mult") + '</span> ' +
             '<select class="mult-select"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select> ' +
             '<button class="btn-sm btn-remove">&times;</button>';
         div.querySelector(".btn-remove").addEventListener("click", function() {
@@ -757,15 +794,15 @@
         // Check end behavior
         const selectedRadio = document.querySelector('input[name="behavior"]:checked');
         if (!selectedRadio) {
-            errors.push("Please select an end behavior.");
+            errors.push(t("selectBehavior"));
         } else if (selectedRadio.value !== getCorrectBehavior()) {
-            errors.push("End behavior is incorrect.");
+            errors.push(t("wrongBehavior"));
         }
 
         // Check zeros
         const userZeros = getUserZeros();
         if (userZeros === null) {
-            errors.push("Invalid zero value. Use integers, decimals, or fractions like 3/2.");
+            errors.push(t("invalidZero"));
         } else {
             const actual = poly.roots.map(f => ({ root: f.root, mult: f.mult }));
             const matched = new Array(actual.length).fill(false);
@@ -791,16 +828,16 @@
                         }
                     }
                     if (rootFound) {
-                        errors.push("Zero x = " + uz.root + " has the wrong multiplicity.");
+                        errors.push(t("wrongMult").replace("{0}", uz.root));
                     } else {
-                        errors.push("x = " + uz.root + " is not a zero.");
+                        errors.push(t("notAZero").replace("{0}", uz.root));
                     }
                 }
             }
 
             for (let i = 0; i < actual.length; i++) {
                 if (!matched[i]) {
-                    errors.push("Missing zero at x = " + actual[i].root + ".");
+                    errors.push(t("missingZero").replace("{0}", actual[i].root));
                 }
             }
         }
@@ -808,31 +845,31 @@
         total++;
         if (errors.length === 0) {
             score++;
-            fb.textContent = "Correct! Well done!";
+            fb.textContent = t("correct");
             fb.style.color = "#10B981";
         } else {
             fb.innerHTML = errors.join("<br>");
             fb.style.color = "#EF4444";
         }
-        document.getElementById("scoreText").textContent = "Score: " + score + " / " + total;
+        document.getElementById("scoreText").textContent = t("scoreLabel") + ": " + score + " / " + total;
     }
 
     function showSolution() {
         showSolutionDots = true;
         document.getElementById("graphSection").style.display = "block";
-        document.getElementById("btnShowGraph").textContent = "Hide Graph";
+        document.getElementById("btnShowGraph").textContent = t("hideGraph");
         requestAnimationFrame(drawPlot);
 
         const beh = getCorrectBehavior();
         const behNames = {
-            "bl-tr": "Bottom-left \u2192 Top-right",
-            "tl-br": "Top-left \u2192 Bottom-right",
-            "tl-tr": "Top-left \u2192 Top-right",
-            "bl-br": "Bottom-left \u2192 Bottom-right"
+            "bl-tr": t("bltr"),
+            "tl-br": t("tlbr"),
+            "tl-tr": t("tltr"),
+            "bl-br": t("blbr")
         };
 
-        let text = "End behavior: " + behNames[beh] + "\n";
-        text += "Zeros: " + poly.roots.map(f => "x = " + f.root + " (mult " + f.mult + ")").join(",  ");
+        let text = t("endBehaviorSol") + ": " + behNames[beh] + "\n";
+        text += t("zerosSol") + ": " + poly.roots.map(f => "x = " + f.root + " (mult " + f.mult + ")").join(",  ");
         text += "\n" + formatFactored(poly);
 
         document.getElementById("solutionText").textContent = text;
@@ -864,7 +901,7 @@
         document.getElementById("solutionText").textContent = "";
 
         document.getElementById("graphSection").style.display = "none";
-        document.getElementById("btnShowGraph").textContent = "Show Graph";
+        document.getElementById("btnShowGraph").textContent = t("showGraph");
 
         const checkbox = document.getElementById("factoredMode");
         checkbox.checked = poly.m > 1;
@@ -884,11 +921,11 @@
         const btn = document.getElementById("btnShowGraph");
         if (section.style.display === "none") {
             section.style.display = "block";
-            btn.textContent = "Hide Graph";
+            btn.textContent = t("hideGraph");
             requestAnimationFrame(drawPlot);
         } else {
             section.style.display = "none";
-            btn.textContent = "Show Graph";
+            btn.textContent = t("showGraph");
         }
     });
 
@@ -899,6 +936,25 @@
             opt.classList.add('selected');
         });
     });
+
+    function applyLanguage() {
+        document.documentElement.lang = lang;
+        document.querySelectorAll("[data-i18n]").forEach(function(el) {
+            var key = el.getAttribute("data-i18n");
+            if (i18n[key]) el.textContent = t(key);
+        });
+        document.getElementById("langDe").style.fontWeight = lang === "de" ? "bold" : "normal";
+        document.getElementById("langDe").style.color = lang === "de" ? "white" : "rgba(255,255,255,0.5)";
+        document.getElementById("langEn").style.fontWeight = lang === "en" ? "bold" : "normal";
+        document.getElementById("langEn").style.color = lang === "en" ? "white" : "rgba(255,255,255,0.5)";
+        document.getElementById("scoreText").textContent = t("scoreLabel") + ": " + score + " / " + total;
+        var graphSection = document.getElementById("graphSection");
+        document.getElementById("btnShowGraph").textContent = graphSection.style.display === "none" ? t("showGraph") : t("hideGraph");
+        document.querySelectorAll(".mult-label").forEach(function(el) { el.textContent = t("mult"); });
+    }
+
+    document.getElementById("langDe").addEventListener("click", function() { lang = "de"; applyLanguage(); });
+    document.getElementById("langEn").addEventListener("click", function() { lang = "en"; applyLanguage(); });
 
     window.addEventListener("resize", drawPlot);
 
