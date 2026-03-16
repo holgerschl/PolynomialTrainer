@@ -101,6 +101,48 @@
             overflow-x: auto;
         }
 
+        .quad-formula {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3em;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.1rem;
+            color: var(--orange);
+        }
+        .quad-formula .frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+        }
+        .quad-formula .frac .num,
+        .quad-formula .frac .den {
+            padding: 0 0.25em;
+            text-align: center;
+            line-height: 1.4;
+        }
+        .quad-formula .frac .num {
+            border-bottom: 2px solid var(--orange);
+        }
+        .quad-formula .sqrt {
+            display: inline-flex;
+            align-items: stretch;
+            position: relative;
+            margin-left: 0.15em;
+        }
+        .quad-formula .sqrt::before {
+            content: "\221A";
+            font-size: 1.6em;
+            line-height: 0.85;
+            margin-right: 1px;
+        }
+        .quad-formula .sqrt .radicand {
+            border-top: 2px solid var(--orange);
+            padding: 0 0.2em;
+            display: inline-flex;
+            align-items: center;
+        }
+
         /* End behavior */
         .behavior-grid {
             display: grid;
@@ -341,7 +383,7 @@
         backLink: { de: "\u2190 Zur\u00FCck zur Projektwebsite", en: "\u2190 Back to project website" },
         factoredLabel: { de: " In faktorisierter Form anzeigen (einfacher)", en: " Show in factored form (easier)" },
         showQuadFormula: { de: " L\u00F6sungsformel anzeigen", en: " Show quadratic formula" },
-        quadFormula: { de: "Mitternachtsformel:  x\u2081,\u2082 = (\u2212b \u00B1 \u221A(b\u00B2 \u2212 4ac)) / (2a)", en: "Quadratic formula:  x\u2081,\u2082 = (\u2212b \u00B1 \u221A(b\u00B2 \u2212 4ac)) / (2a)" },
+        quadFormulaLabel: { de: "Mitternachtsformel:", en: "Quadratic formula:" },
         showGraph: { de: "Graph anzeigen", en: "Show Graph" },
         hideGraph: { de: "Graph ausblenden", en: "Hide Graph" },
         endBehaviorTitle: { de: "1. Endverhalten", en: "1. End Behavior" },
@@ -933,7 +975,13 @@
         var checked = document.getElementById("showQuadFormula").checked;
         if (checked && poly && poly.qDeg === 2 && poly.m > 0) {
             box.style.display = "block";
-            box.textContent = t("quadFormula");
+            box.innerHTML = '<span class="quad-formula">'
+                + t("quadFormulaLabel") + '&ensp;x<sub>1,2</sub>&ensp;=&ensp;'
+                + '<span class="frac">'
+                +   '<span class="num">&minus;b &plusmn; <span class="sqrt"><span class="radicand">b&sup2; &minus; 4ac</span></span></span>'
+                +   '<span class="den">2a</span>'
+                + '</span>'
+                + '</span>';
         } else {
             box.style.display = "none";
         }
