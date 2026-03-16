@@ -102,45 +102,13 @@
         }
 
         .quad-formula {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3em;
             font-family: 'Cambria Math', 'Times New Roman', serif;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             color: var(--orange);
         }
-        .quad-formula .frac {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
+        .quad-formula math {
+            font-size: 1.2em;
             vertical-align: middle;
-        }
-        .quad-formula .frac .num,
-        .quad-formula .frac .den {
-            padding: 0 0.25em;
-            text-align: center;
-            line-height: 1.4;
-        }
-        .quad-formula .frac .num {
-            border-bottom: 2px solid var(--orange);
-        }
-        .quad-formula .sqrt {
-            display: inline-flex;
-            align-items: stretch;
-            position: relative;
-            margin-left: 0.15em;
-        }
-        .quad-formula .sqrt::before {
-            content: "\221A";
-            font-size: 1.6em;
-            line-height: 0.85;
-            margin-right: 1px;
-        }
-        .quad-formula .sqrt .radicand {
-            border-top: 2px solid var(--orange);
-            padding: 0 0.2em;
-            display: inline-flex;
-            align-items: center;
         }
 
         /* End behavior */
@@ -976,11 +944,15 @@
         if (checked) {
             box.style.display = "block";
             box.innerHTML = '<span class="quad-formula">'
-                + t("quadFormulaLabel") + '&ensp;x<sub>1,2</sub>&ensp;=&ensp;'
-                + '<span class="frac">'
-                +   '<span class="num">&minus;b &plusmn; <span class="sqrt"><span class="radicand">b&sup2; &minus; 4ac</span></span></span>'
-                +   '<span class="den">2a</span>'
-                + '</span>'
+                + t("quadFormulaLabel") + ' '
+                + '<math display="inline">'
+                +   '<msub><mi>x</mi><mrow><mn>1</mn><mo>,</mo><mn>2</mn></mrow></msub>'
+                +   '<mo>=</mo>'
+                +   '<mfrac>'
+                +     '<mrow><mo>−</mo><mi>b</mi><mo>±</mo><msqrt><mrow><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></mrow></msqrt></mrow>'
+                +     '<mrow><mn>2</mn><mi>a</mi></mrow>'
+                +   '</mfrac>'
+                + '</math>'
                 + '</span>';
         } else {
             box.style.display = "none";
