@@ -973,7 +973,7 @@
     function updateQuadFormula() {
         var box = document.getElementById("quadFormulaBox");
         var checked = document.getElementById("showQuadFormula").checked;
-        if (checked && poly && poly.qDeg === 2 && poly.m > 0) {
+        if (checked) {
             box.style.display = "block";
             box.innerHTML = '<span class="quad-formula">'
                 + t("quadFormulaLabel") + '&ensp;x<sub>1,2</sub>&ensp;=&ensp;'
