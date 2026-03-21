@@ -52,6 +52,9 @@
         canvas {
             display: block;
             width: 100%;
+            max-width: 100%;
+            height: auto;
+            aspect-ratio: 1060 / 480;
             border-radius: 8px;
         }
 
@@ -611,6 +614,11 @@
     function drawPlot() {
         const dpr = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
+        // Hidden graph (display:none) or zero layout: skip — avoids wiping the bitmap on
+        // window resize and avoids drawing with negative plot width/height.
+        if (rect.width < 2 || rect.height < 2) {
+            return;
+        }
         canvas.width = rect.width * dpr;
         canvas.height = rect.height * dpr;
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -874,9 +882,11 @@
 
     function showSolution() {
         showSolutionDots = true;
-        document.getElementById("graphSection").style.display = "block";
+        const graphSection = document.getElementById("graphSection");
+        graphSection.style.display = "block";
+        void graphSection.offsetHeight;
         document.getElementById("btnShowGraph").textContent = t("hideGraph");
-        requestAnimationFrame(drawPlot);
+        requestAnimationFrame(function() { requestAnimationFrame(drawPlot); });
 
         const beh = getCorrectBehavior();
         const behNames = {
@@ -966,8 +976,9 @@
         const btn = document.getElementById("btnShowGraph");
         if (section.style.display === "none") {
             section.style.display = "block";
+            void section.offsetHeight;
             btn.textContent = t("hideGraph");
-            requestAnimationFrame(drawPlot);
+            requestAnimationFrame(function() { requestAnimationFrame(drawPlot); });
         } else {
             section.style.display = "none";
             btn.textContent = t("showGraph");
